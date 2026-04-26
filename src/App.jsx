@@ -42,6 +42,75 @@ const FigmaIcon = ({ size = 24, className = "" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"></path><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"></path><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"></path><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"></path><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"></path></svg>
 );
 
+// --- KOMPONEN ANIMASI ANGKA (COUNT UP) ---
+const AnimatedCounter = ({ target, suffix }) => {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.1 });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    let start = 0;
+    const duration = 2000; // 2 detik hitung
+    const increment = target / (duration / 16); 
+    
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.ceil(start));
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  }, [isVisible, target]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+};
+
+// --- KOMPONEN ANIMASI TYPING KATA PER KATA ---
+const TypingText = ({ text }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.1 });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <p ref={ref} className="text-zinc-400 leading-relaxed text-sm md:text-base">
+      {text.split(' ').map((word, i) => (
+        <span
+          key={i}
+          className={`inline-block mr-1.5 transition-all duration-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          style={{ transitionDelay: `${i * 30}ms` }} 
+        >
+          {word}
+        </span>
+      ))}
+    </p>
+  );
+};
+
 // --- DATA TRANSLATION ---
 const dict = {
   id: {
@@ -154,34 +223,36 @@ const projectsData = [
   }
 ];
 
+// --- 15 TECH STACK BESERTA DESKRIPSI DETAIL UNTUK POP-UP ---
 const techStack = [
-  { name: 'React', desc: 'FRONTEND LIB', icon: <Code2 size={24} className="text-blue-400" /> },
-  { name: 'Tailwind', desc: 'CSS FRAMEWORK', icon: <Layout size={24} className="text-teal-400" /> },
-  { name: 'Node.js', desc: 'BACKEND RUNTIME', icon: <Terminal size={24} className="text-green-500" /> },
-  { name: 'Next.js', desc: 'WEB FRAMEWORK', icon: <Globe size={24} className="text-white" /> },
-  { name: 'PHP', desc: 'BACKEND SCRIPTING', icon: <Code2 size={24} className="text-indigo-400" /> },
-  { name: 'Laravel', desc: 'PHP FRAMEWORK', icon: <Box size={24} className="text-red-500" /> },
-  { name: 'CodeIgniter 4', desc: 'PHP FRAMEWORK', icon: <Flame size={24} className="text-orange-500" /> },
-  { name: 'Kali Linux', desc: 'PEN TESTING OS', icon: <ShieldCheck size={24} className="text-indigo-400" /> },
-  { name: 'Python', desc: 'SCRIPTING', icon: <Code2 size={24} className="text-yellow-400" /> },
-  { name: 'PostgreSQL', desc: 'DATABASE', icon: <Database size={24} className="text-blue-300" /> },
-  { name: 'Burp Suite', desc: 'SECURITY TOOL', icon: <ShieldCheck size={24} className="text-orange-500" /> },
-  { name: 'Figma', desc: 'UI/UX DESIGN', icon: <FigmaIcon size={24} className="text-pink-400" /> },
-  { name: 'Canva', desc: 'LAYOUT DESIGN', icon: <Paintbrush size={24} className="text-cyan-400" /> },
-  { name: 'Premiere Pro', desc: 'VIDEO EDITING', icon: <Video size={24} className="text-purple-500" /> },
-  { name: 'Capcut', desc: 'VIDEO EDITING', icon: <Scissors size={24} className="text-gray-100" /> },
+  { name: 'React', desc: 'FRONTEND LIB', details: 'Library andalan saya untuk membangun antarmuka pengguna yang interaktif, reaktif, dan komponen-based. Sangat optimal untuk merender data dinamis secara real-time.', icon: <Code2 size={24} className="text-blue-400" /> },
+  { name: 'Tailwind', desc: 'CSS FRAMEWORK', details: 'Mempercepat proses styling web dengan utility-classes. Membuat desain responsif menjadi super gampang, konsisten, dan memiliki ukuran file yang sangat ringan saat di-build.', icon: <Layout size={24} className="text-teal-400" /> },
+  { name: 'Node.js', desc: 'BACKEND RUNTIME', details: 'Environment runtime untuk mengeksekusi JavaScript di sisi server. Sangat cepat dan scalable untuk membuat REST API dan menangani jutaan request.', icon: <Terminal size={24} className="text-green-500" /> },
+  { name: 'Next.js', desc: 'WEB FRAMEWORK', details: 'Framework React pilihan utama saya untuk level produksi. Saya gunakan untuk Server-Side Rendering (SSR), optimasi SEO-friendly web, dan performa yang maksimal.', icon: <Globe size={24} className="text-white" /> },
+  { name: 'PHP', desc: 'BACKEND SCRIPTING', details: 'Bahasa backend klasik yang sangat solid. Sering saya gunakan untuk membangun sistem logika web custom atau me-maintenance arsitektur server legacy (lama).', icon: <Code2 size={24} className="text-indigo-400" /> },
+  { name: 'Laravel', desc: 'PHP FRAMEWORK', details: 'Framework PHP paling elegan. Saya andalkan untuk membuat aplikasi web kompleks dengan fitur keamanan yang ketat dan arsitektur MVC yang sangat rapi.', icon: <Box size={24} className="text-red-500" /> },
+  { name: 'CodeIgniter 4', desc: 'PHP FRAMEWORK', details: 'Ringan, super cepat, dan sangat mudah di-deploy. Solusi paling akurat untuk proyek PHP yang memiliki resource server terbatas atau sekadar API sederhana.', icon: <Flame size={24} className="text-orange-500" /> },
+  { name: 'Kali Linux', desc: 'PEN TESTING OS', details: 'Sistem operasi wajib untuk menguji kerentanan server dan aplikasi. Dilengkapi ratusan tools keamanan siber untuk keperluan penetration testing dan ethical hacking.', icon: <ShieldCheck size={24} className="text-indigo-400" /> },
+  { name: 'Python', desc: 'SCRIPTING', details: 'Bahasa serba bisa dan fleksibel. Sering saya pakai untuk automasi tugas sehari-hari, membuat script eksploitasi keamanan custom, hingga manipulasi big data.', icon: <Code2 size={24} className="text-yellow-400" /> },
+  { name: 'PostgreSQL', desc: 'DATABASE', details: 'Database relasional terkuat pilihan saya. Sangat tangguh, dijamin aman, dan mampu menangani eksekusi query kompleks dengan volume data berskala besar tanpa lag.', icon: <Database size={24} className="text-blue-300" /> },
+  { name: 'Burp Suite', desc: 'SECURITY TOOL', details: 'Senjata rahasia utama untuk web vulnerability scanning dan memanipulasi alur traffic HTTP/HTTPS dalam aktivitas mencari celah keamanan web (pentest).', icon: <ShieldCheck size={24} className="text-orange-500" /> },
+  { name: 'Figma', desc: 'UI/UX DESIGN', details: 'Tool kolaboratif super canggih untuk merancang wireframe, mockup estetis, dan prototype web interaktif sebelum masuk ke tahap eksekusi coding.', icon: <FigmaIcon size={24} className="text-pink-400" /> },
+  { name: 'Canva', desc: 'LAYOUT DESIGN', details: 'Penyelamat handal untuk merancang aset grafis dengan cepat, membuat presentasi proyek, atau menghasilkan ilustrasi sederhana pendukung visual website.', icon: <Paintbrush size={24} className="text-cyan-400" /> },
+  { name: 'Premiere Pro', desc: 'VIDEO EDITING', details: 'Software andalan kelas dunia untuk mengedit video portofolio, memotong klip presentasi project, atau membuat dokumentasi profesional dengan standar industri.', icon: <Video size={24} className="text-purple-500" /> },
+  { name: 'Capcut', desc: 'VIDEO EDITING', details: 'Sangat praktis untuk proses editing video kilat, terutama untuk memenuhi kebutuhan konten sosial media yang serba dinamis dengan efek transisi kekinian.', icon: <Scissors size={24} className="text-gray-100" /> },
 ];
 
 export default function App() {
   const [lang, setLang] = useState('id');
   const t = dict[lang];
 
-  // STATE SPLASH SCREEN & MUSIK
+  // STATE APLIKASI
   const [showSplash, setShowSplash] = useState(true);
   const [isSplashExiting, setIsSplashExiting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hoveredTech, setHoveredTech] = useState(null); // State Popup Tengah Layar
+  
   const audioRef = useRef(null);
-
   const heroCardRef = useRef(null);
   const aboutLanyardRef = useRef(null);
   
@@ -189,7 +260,14 @@ export default function App() {
   const [isDragging, setIsDragging] = useState(false);
   const dragStartPos = useRef({ x: 0, y: 0 });
 
-  // Mencegah scroll body saat Splash Screen aktif
+  // Handle Klik Global untuk nutup modal pop-up Tech Stack di mobile
+  useEffect(() => {
+    const handleGlobalClick = () => setHoveredTech(null);
+    window.addEventListener('click', handleGlobalClick);
+    return () => window.removeEventListener('click', handleGlobalClick);
+  }, []);
+
+  // Lock scroll pas splash screen aktif
   useEffect(() => {
     if (showSplash) {
       document.body.style.overflow = 'hidden';
@@ -199,9 +277,9 @@ export default function App() {
     }
   }, [showSplash]);
   
-  // --- OPTIMASI INTERSECTION OBSERVER ---
+  // OBSERVER UNTUK ANIMASI SCROLL
   useEffect(() => {
-    if (showSplash) return; // Jangan pasang observer kalau masih di intro
+    if (showSplash) return; 
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -222,7 +300,7 @@ export default function App() {
     };
   }, [lang, showSplash]); 
 
-  // --- OPTIMASI MOUSE PARALLAX ---
+  // MOUSE PARALLAX EFFECT HERO
   useEffect(() => {
     if (showSplash) return;
 
@@ -253,7 +331,7 @@ export default function App() {
     };
   }, [isDragging, showSplash]);
 
-  // --- LOGIKA DRAG ELASTIS ---
+  // ELASTIC LANYARD DRAG LOGIC
   const handleDragStart = (e) => {
     if (e.cancelable) e.preventDefault();
     setIsDragging(true);
@@ -310,18 +388,12 @@ export default function App() {
   const stringAngleRad = Math.atan2(dragPos.x, stringBaseHeight + dragPos.y);
   const stringAngleDeg = stringAngleRad * (180 / Math.PI);
 
-  // --- FUNGSI MASUK KE WEB (Buka Splash + Play Musik) ---
   const handleEnterSite = () => {
-    // Mulai animasi transisi naik ke atas
     setIsSplashExiting(true);
-    
-    // Play Musik
     if (audioRef.current) {
       audioRef.current.play().catch(e => console.log('Autoplay ditolak browser', e));
       setIsPlaying(true);
     }
-
-    // Hilangkan div Splash dari DOM setelah 800ms
     setTimeout(() => {
       setShowSplash(false);
     }, 800);
@@ -425,41 +497,29 @@ export default function App() {
         }
       `}} />
 
-      {/* AUDIO ELEMENT */}
+      {/* AUDIO KICAU MANIA */}
       <audio ref={audioRef} loop>
         <source src="musik.mp3" type="audio/mpeg" />
       </audio>
 
-      {/* =========================================
-          INTRO / SPLASH SCREEN (SESUAI REFERENSI GAMBAR)
-          ========================================= */}
+      {/* INTRO / SPLASH SCREEN */}
       {showSplash && (
-        <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#09090b] transition-all duration-700 ease-in-out ${isSplashExiting ? 'opacity-0 -translate-y-20 scale-105 pointer-events-none' : 'opacity-100 translate-y-0 scale-100'}`}>
-          
-          {/* Teks Raksasa Background */}
+        <div className={`fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#09090b] transition-all duration-700 ease-in-out ${isSplashExiting ? 'opacity-0 -translate-y-20 scale-105 pointer-events-none' : 'opacity-100 translate-y-0 scale-100'}`}>
           <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
             <h1 className="text-[16vw] font-black text-white/[0.03] select-none whitespace-nowrap tracking-tighter mix-blend-screen animate-spring">
               PORTOFOLIO
             </h1>
           </div>
 
-          {/* Konten Depan (Foreground) */}
           <div className="relative z-10 flex flex-col items-center animate-fade-up" style={{ animationDelay: '300ms' }}>
-            
-            {/* Teks Atas */}
             <p className="text-teal-400 font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-4 drop-shadow-md z-20 bg-black/40 px-4 py-1 rounded-full border border-teal-500/30">
               Fullstack Dev & Cyber Security
             </p>
 
-            {/* Foto Profil ala Cover / Poster (Pseudo-Cutout) */}
             <div className="relative w-[280px] h-[360px] md:w-[320px] md:h-[400px] rounded-t-full rounded-b-3xl overflow-hidden shadow-[0_0_80px_rgba(20,184,166,0.15)] border border-white/10 group mb-6 bg-zinc-900">
-              {/* Gambar Profil */}
               <img src="/profil.jpg" alt="Danial Gibran" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90" />
-              
-              {/* Vignette Overlay (Biar nyatu sama background) */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#09090b]"></div>
               
-              {/* Tombol Play Raksasa di Tengah Foto */}
               <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]">
                  <button 
                    onClick={handleEnterSite}
@@ -471,11 +531,9 @@ export default function App() {
               </div>
             </div>
 
-            {/* Teks Bawah */}
             <div className="bg-zinc-900/80 px-8 py-3.5 rounded-full border border-zinc-800/80 backdrop-blur-md shadow-2xl relative z-20">
               <p className="text-zinc-400 text-sm md:text-base">Presented by <span className="text-white font-bold">Danial Gibran</span></p>
             </div>
-            
           </div>
         </div>
       )}
@@ -492,15 +550,15 @@ export default function App() {
           <VolumeX size={24} />
         )}
         <span className="absolute right-16 bg-zinc-800 text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-zinc-700">
-          {isPlaying ? 'Pause Musik' : 'Play Musik'}
+          {isPlaying ? 'Pause Kicauan' : 'Play Kicau Mania'}
         </span>
       </button>
 
-      {/* BACKGROUND ELEMENTS */}
+      {/* ABSTRACT BACKGROUNDS */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-teal-500/10 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none"></div>
 
-      {/* Navbar */}
+      {/* NAVBAR */}
       <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b-0 border-x-0 border-t-0 border-b-zinc-800/50 px-6 py-4 animate-fade-up" style={{ animationDelay: '0ms' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="text-2xl font-bold text-white tracking-tighter">
@@ -510,6 +568,7 @@ export default function App() {
           <div className="hidden md:flex items-center space-x-8 text-sm font-medium">
             <a href="#home" className="hover:text-teal-400 transition-colors">{t.nav.home}</a>
             <a href="#about" className="hover:text-teal-400 transition-colors">{t.nav.about}</a>
+            <a href="#stack" className="hover:text-teal-400 transition-colors">Tools</a>
             <a href="#projects" className="hover:text-teal-400 transition-colors">{t.nav.projects}</a>
             <a href="#contact" className="hover:text-teal-400 transition-colors">{t.nav.contact}</a>
             
@@ -526,7 +585,7 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* HERO SECTION */}
       <section id="home" className="relative pt-32 pb-20 px-6 min-h-screen flex items-center">
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           
@@ -582,7 +641,6 @@ export default function App() {
                 alt="Danial Gibran" 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              
               <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-transparent to-transparent opacity-90"></div>
               
               <div className="absolute bottom-6 left-6 right-6 glass-card rounded-2xl p-4 flex items-center justify-between border border-white/10 shadow-2xl">
@@ -609,7 +667,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* ABOUT SECTION */}
       <section id="about" className="py-20 px-6 relative overflow-hidden">
         <div className="max-w-5xl mx-auto glass-card rounded-3xl p-8 md:p-12 relative">
           <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 rounded-full blur-[80px]"></div>
@@ -619,10 +677,7 @@ export default function App() {
             <div className="hidden md:flex md:col-span-4 justify-center items-start h-full perspective-[1000px] mt-[-40px] select-none scroll-drop">
               <div 
                 className="lanyard-swing flex flex-col items-center" 
-                style={{ 
-                  animationDelay: '-1.5s', 
-                  animationPlayState: isDragging ? 'paused' : 'running' 
-                }}
+                style={{ animationDelay: '-1.5s', animationPlayState: isDragging ? 'paused' : 'running' }}
               >
                 <div 
                   className={`w-1 bg-gradient-to-b from-zinc-800 to-zinc-500 shadow-xl rounded-full origin-top ${isDragging ? '' : 'transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]'}`}
@@ -645,22 +700,15 @@ export default function App() {
                     className={`glass-card w-56 rounded-2xl p-4 shadow-2xl flex flex-col mt-2 relative overflow-hidden group pointer-events-none ${isDragging ? '' : 'transition-transform duration-100 ease-out'}`}
                   >
                     <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                    
                     <div className="w-full h-36 bg-zinc-800 rounded-xl overflow-hidden relative border border-zinc-700/50">
-                      <img 
-                        src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=400" 
-                        alt="Matrix Security" 
-                        className="w-full h-full object-cover opacity-30 mix-blend-luminosity"
-                      />
+                      <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=400" alt="Matrix Security" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" />
                       <div className="absolute inset-0 flex items-center justify-center">
                          <ShieldCheck size={56} className="text-teal-400 drop-shadow-[0_0_15px_rgba(20,184,166,0.6)]" />
                       </div>
                     </div>
-
                     <div className="mt-4 text-center pb-2">
                       <h3 className="text-sm font-bold text-white tracking-widest">SECURITY BADGE</h3>
                       <p className="text-[10px] text-teal-400 font-mono mt-1">ACCESS LVL: ROOT</p>
-                      
                       <div className="w-full h-1 bg-zinc-800 rounded-full mt-4 overflow-hidden">
                         <div className="h-full bg-teal-400 w-full animate-pulse"></div>
                       </div>
@@ -670,7 +718,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="md:col-span-8 flex flex-col justify-center space-y-8">
+            <div className="md:col-span-8 flex flex-col justify-center space-y-6">
               <div className="animate-on-scroll">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
                   {t.about.title.split(' ')[0]} <span className="text-teal-400">{t.about.title.split(' ')[1] || ''}</span>
@@ -678,23 +726,32 @@ export default function App() {
                 <p className="text-zinc-500 italic mb-6 border-l-2 border-zinc-700 pl-4">
                   {t.about.subtitle}
                 </p>
-                <div className="space-y-4 text-zinc-400 leading-relaxed text-sm md:text-base">
-                  <p>{t.about.p1}</p>
-                  <p>{t.about.p2}</p>
+                
+                {/* Animasi Text Typing yang Baru */}
+                <div className="space-y-4">
+                   <TypingText text={t.about.p1} />
+                   <TypingText text={t.about.p2} />
                 </div>
               </div>
 
+              {/* Animasi Angka Penghitung (Counter) yang Baru */}
               <div className="grid grid-cols-3 gap-4 border-t border-zinc-800/50 pt-6 animate-on-scroll" style={{ transitionDelay: '100ms' }}>
                 <div>
-                  <h4 className="text-3xl font-bold text-teal-400 mb-1">3+</h4>
+                  <h4 className="text-3xl font-bold text-teal-400 mb-1">
+                    <AnimatedCounter target={3} suffix="+" />
+                  </h4>
                   <p className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase">{t.about.exp}</p>
                 </div>
                 <div>
-                  <h4 className="text-3xl font-bold text-blue-400 mb-1">20+</h4>
+                  <h4 className="text-3xl font-bold text-blue-400 mb-1">
+                    <AnimatedCounter target={20} suffix="+" />
+                  </h4>
                   <p className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase">{t.about.proj}</p>
                 </div>
                 <div>
-                  <h4 className="text-3xl font-bold text-purple-400 mb-1">15+</h4>
+                  <h4 className="text-3xl font-bold text-purple-400 mb-1">
+                    <AnimatedCounter target={15} suffix="+" />
+                  </h4>
                   <p className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase">{t.about.client}</p>
                 </div>
               </div>
@@ -711,7 +768,69 @@ export default function App() {
         </div>
       </section>
 
-      {/* Projects Section */}
+      {/* TECH STACK SECTION (SEKARANG ADA DI ATAS PROJECTS) */}
+      <section id="stack" className="py-20 px-6 relative">
+        <div className="max-w-6xl mx-auto text-center mb-16 animate-on-scroll">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            {t.stack.title.split(' ')[0]} <span className="text-teal-400">& {t.stack.title.split(' ').slice(2).join(' ')}</span>
+          </h2>
+          <div className="w-16 h-1 bg-teal-500 mx-auto rounded-full mb-4"></div>
+          <p className="text-zinc-400">{t.stack.subtitle}</p>
+        </div>
+
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-4">
+          {techStack.map((tech, i) => (
+            <div 
+              key={i} 
+              onMouseEnter={() => setHoveredTech(tech)}
+              onMouseLeave={() => setHoveredTech(null)}
+              onClick={(e) => { e.stopPropagation(); setHoveredTech(tech); }}
+              className="glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 transition-all duration-300 hover:bg-zinc-800/80 cursor-pointer animate-on-scroll relative group"
+              style={{ transitionDelay: `${(i % 5) * 50}ms` }}
+            >
+              {/* Kotak Item Grid Asli. Nggak ngilang 100% biar UX tetep bagus pas di-hover */}
+              <div className={`transition-all duration-300 ${hoveredTech === tech ? 'opacity-30' : 'opacity-100'}`}>
+                <div className="p-3 bg-zinc-800/50 rounded-xl mx-auto flex items-center justify-center">
+                  {tech.icon}
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-zinc-200 mt-3">{tech.name}</h4>
+                  <p className="text-[10px] tracking-widest text-zinc-500 font-semibold mt-1 uppercase">{tech.desc}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CENTRAL POPUP UNTUK TECH STACK (MEMBESAR KE TENGAH LAYAR) */}
+      <div 
+         className={`fixed inset-0 z-[150] pointer-events-none flex items-center justify-center transition-opacity duration-500 ${hoveredTech ? 'opacity-100' : 'opacity-0'}`}
+      >
+        {/* Latar Belakang Gelap / Ngeblur (Gak menghalangi kursor hover) */}
+        <div className="absolute inset-0 bg-[#09090b]/40 backdrop-blur-[2px] transition-opacity duration-500"></div>
+        
+        {/* Kotak Hologram Besar di Tengah (Pop-up) */}
+        <div className={`relative z-10 glass-card p-8 md:p-12 max-w-md w-[90%] rounded-[2rem] flex flex-col items-center text-center shadow-[0_0_100px_rgba(20,184,166,0.3)] transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${hoveredTech ? 'scale-100 translate-y-0 opacity-100' : 'scale-50 translate-y-10 opacity-0'}`}>
+          {hoveredTech && (
+            <>
+               <div className="absolute top-10 w-40 h-40 bg-teal-500/20 rounded-full blur-[50px] -z-10"></div>
+               <div className="p-5 bg-zinc-800/80 rounded-2xl mb-6 shadow-2xl border border-zinc-700/50 text-teal-400">
+                 {/* Besarin ukuran Icon aslinya */}
+                 {React.cloneElement(hoveredTech.icon, { size: 48, className: "text-white" })}
+               </div>
+               <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">{hoveredTech.name}</h3>
+               <p className="text-xs text-teal-400 tracking-widest font-mono mb-6 uppercase bg-teal-500/10 border border-teal-500/30 px-4 py-1.5 rounded-full">{hoveredTech.desc}</p>
+               <p className="text-zinc-300 leading-relaxed text-sm md:text-base border-t border-zinc-800 pt-6">
+                 {hoveredTech.details}
+               </p>
+            </>
+          )}
+        </div>
+      </div>
+
+
+      {/* PROJECTS SECTION (SEKARANG ADA DI BAWAH TECH STACK) */}
       <section id="projects" className="py-20 px-6">
         <div className="max-w-7xl mx-auto text-center mb-16 animate-on-scroll">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -749,35 +868,6 @@ export default function App() {
                     <ChevronRight size={16} />
                   </button>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Tech Stack Section */}
-      <section id="stack" className="py-20 px-6 relative">
-        <div className="max-w-6xl mx-auto text-center mb-16 animate-on-scroll">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            {t.stack.title.split(' ')[0]} <span className="text-teal-400">& {t.stack.title.split(' ').slice(2).join(' ')}</span>
-          </h2>
-          <div className="w-16 h-1 bg-teal-500 mx-auto rounded-full mb-4"></div>
-          <p className="text-zinc-400">{t.stack.subtitle}</p>
-        </div>
-
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-4">
-          {techStack.map((tech, i) => (
-            <div 
-              key={i} 
-              className="glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 hover:bg-zinc-800/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(20,184,166,0.1)] group cursor-default animate-on-scroll"
-              style={{ transitionDelay: `${(i % 5) * 50}ms` }}
-            >
-              <div className="p-3 bg-zinc-800/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                {tech.icon}
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-zinc-200">{tech.name}</h4>
-                <p className="text-[10px] tracking-widest text-zinc-500 font-semibold mt-1 uppercase">{tech.desc}</p>
               </div>
             </div>
           ))}
