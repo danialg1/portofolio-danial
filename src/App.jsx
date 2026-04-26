@@ -20,9 +20,9 @@ import {
   Scissors,
   Box,
   Flame,
-  Music,
   Volume2,
-  VolumeX
+  VolumeX,
+  Play
 } from 'lucide-react';
 
 // --- CUSTOM BRAND ICONS ---
@@ -176,7 +176,9 @@ export default function App() {
   const [lang, setLang] = useState('id');
   const t = dict[lang];
 
-  // STATE MUSIK
+  // STATE SPLASH SCREEN & MUSIK
+  const [showSplash, setShowSplash] = useState(true);
+  const [isSplashExiting, setIsSplashExiting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
@@ -186,9 +188,21 @@ export default function App() {
   const [dragPos, setDragPos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const dragStartPos = useRef({ x: 0, y: 0 });
+
+  // Mencegah scroll body saat Splash Screen aktif
+  useEffect(() => {
+    if (showSplash) {
+      document.body.style.overflow = 'hidden';
+      window.scrollTo(0, 0);
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [showSplash]);
   
   // --- OPTIMASI INTERSECTION OBSERVER ---
   useEffect(() => {
+    if (showSplash) return; // Jangan pasang observer kalau masih di intro
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -197,14 +211,21 @@ export default function App() {
       });
     }, { threshold: 0.1 }); 
 
-    const elements = document.querySelectorAll('.animate-on-scroll');
-    elements.forEach(el => observer.observe(el));
+    const timer = setTimeout(() => {
+      const elements = document.querySelectorAll('.animate-on-scroll, .scroll-drop');
+      elements.forEach(el => observer.observe(el));
+    }, 100);
 
-    return () => observer.disconnect();
-  }, [lang]); 
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, [lang, showSplash]); 
 
-  // --- OPTIMASI MOUSE PARALLAX (Pakai requestAnimationFrame biar gak ngelag) ---
+  // --- OPTIMASI MOUSE PARALLAX ---
   useEffect(() => {
+    if (showSplash) return;
+
     let animationFrameId;
     const handleMouseMove = (e) => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -213,7 +234,6 @@ export default function App() {
         const { clientX, clientY } = e;
         const { innerWidth, innerHeight } = window;
         
-        // Tilt lebih dikurangin dikit biar rendering browser lebih enteng
         const xPos = (clientX / innerWidth - 0.5) * 12; 
         const yPos = (clientY / innerHeight - 0.5) * -12;
         
@@ -231,7 +251,7 @@ export default function App() {
       window.removeEventListener('mousemove', handleMouseMove);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
-  }, [isDragging]);
+  }, [isDragging, showSplash]);
 
   // --- LOGIKA DRAG ELASTIS ---
   const handleDragStart = (e) => {
@@ -290,7 +310,23 @@ export default function App() {
   const stringAngleRad = Math.atan2(dragPos.x, stringBaseHeight + dragPos.y);
   const stringAngleDeg = stringAngleRad * (180 / Math.PI);
 
-  // --- FUNGSI PLAY MUSIK ---
+  // --- FUNGSI MASUK KE WEB (Buka Splash + Play Musik) ---
+  const handleEnterSite = () => {
+    // Mulai animasi transisi naik ke atas
+    setIsSplashExiting(true);
+    
+    // Play Musik
+    if (audioRef.current) {
+      audioRef.current.play().catch(e => console.log('Autoplay ditolak browser', e));
+      setIsPlaying(true);
+    }
+
+    // Hilangkan div Splash dari DOM setelah 800ms
+    setTimeout(() => {
+      setShowSplash(false);
+    }, 800);
+  };
+
   const toggleMusic = () => {
     if (isPlaying) {
       audioRef.current.pause();
@@ -303,11 +339,10 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden">
       
-      {/* CSS INJECTIONS (DENGAN GPU ACCELERATION & SHINE EFFECT) */}
+      {/* CSS INJECTIONS */}
       <style dangerouslySetInnerHTML={{__html: `
         html { scroll-behavior: smooth; }
         
-        /* GPU Acceleration untuk Animasi Lebih Ringan */
         .glass-card, .lanyard-swing, .scroll-drop, .animate-on-scroll {
           will-change: transform, opacity;
         }
@@ -328,7 +363,6 @@ export default function App() {
           border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* EFEK CAHAYA KILAU (SHINE/GLOW) SAAT HOVER FOTO */
         .shine-container {
           position: relative;
           overflow: hidden;
@@ -372,8 +406,8 @@ export default function App() {
 
         .animate-on-scroll {
           opacity: 0;
-          transform: translateY(30px);
-          transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+          transform: translateY(40px);
+          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .animate-on-scroll.is-visible {
           opacity: 1;
@@ -382,8 +416,8 @@ export default function App() {
 
         .scroll-drop {
           opacity: 0;
-          transform: translateY(-100px) scale(0.9) rotate(-10deg);
-          transition: opacity 1s ease-out, transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+          transform: translateY(-200px) scale(0.9) rotate(-10deg);
+          transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .scroll-drop.is-visible {
           opacity: 1;
@@ -391,10 +425,61 @@ export default function App() {
         }
       `}} />
 
-      {/* AUDIO ELEMENT (Lo-fi Background Music) */}
+      {/* AUDIO ELEMENT */}
       <audio ref={audioRef} loop>
-        <source src="musik1.mp3" type="audio/mpeg" />
+        <source src="musik.mp3" type="audio/mpeg" />
       </audio>
+
+      {/* =========================================
+          INTRO / SPLASH SCREEN (SESUAI REFERENSI GAMBAR)
+          ========================================= */}
+      {showSplash && (
+        <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#09090b] transition-all duration-700 ease-in-out ${isSplashExiting ? 'opacity-0 -translate-y-20 scale-105 pointer-events-none' : 'opacity-100 translate-y-0 scale-100'}`}>
+          
+          {/* Teks Raksasa Background */}
+          <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
+            <h1 className="text-[16vw] font-black text-white/[0.03] select-none whitespace-nowrap tracking-tighter mix-blend-screen animate-spring">
+              PORTOFOLIO
+            </h1>
+          </div>
+
+          {/* Konten Depan (Foreground) */}
+          <div className="relative z-10 flex flex-col items-center animate-fade-up" style={{ animationDelay: '300ms' }}>
+            
+            {/* Teks Atas */}
+            <p className="text-teal-400 font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-4 drop-shadow-md z-20 bg-black/40 px-4 py-1 rounded-full border border-teal-500/30">
+              Fullstack Dev & Cyber Security
+            </p>
+
+            {/* Foto Profil ala Cover / Poster (Pseudo-Cutout) */}
+            <div className="relative w-[280px] h-[360px] md:w-[320px] md:h-[400px] rounded-t-full rounded-b-3xl overflow-hidden shadow-[0_0_80px_rgba(20,184,166,0.15)] border border-white/10 group mb-6 bg-zinc-900">
+              {/* Gambar Profil */}
+              <img src="/profil.jpg" alt="Danial Gibran" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90" />
+              
+              {/* Vignette Overlay (Biar nyatu sama background) */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#09090b]"></div>
+              
+              {/* Tombol Play Raksasa di Tengah Foto */}
+              <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]">
+                 <button 
+                   onClick={handleEnterSite}
+                   className="w-24 h-24 bg-teal-500/90 text-white rounded-full flex items-center justify-center hover:scale-110 hover:bg-teal-400 transition-all duration-300 shadow-[0_0_40px_rgba(20,184,166,0.6)] cursor-pointer border-4 border-black/20"
+                 >
+                   <Play size={44} className="ml-2" fill="currentColor" />
+                 </button>
+                 <p className="text-white/70 text-xs font-bold tracking-widest mt-4 uppercase animate-pulse">Click to Enter</p>
+              </div>
+            </div>
+
+            {/* Teks Bawah */}
+            <div className="bg-zinc-900/80 px-8 py-3.5 rounded-full border border-zinc-800/80 backdrop-blur-md shadow-2xl relative z-20">
+              <p className="text-zinc-400 text-sm md:text-base">Presented by <span className="text-white font-bold">Danial Gibran</span></p>
+            </div>
+            
+          </div>
+        </div>
+      )}
+
 
       {/* FLOATING MUSIC BUTTON */}
       <button 
@@ -406,12 +491,12 @@ export default function App() {
         ) : (
           <VolumeX size={24} />
         )}
-        {/* Tooltip */}
         <span className="absolute right-16 bg-zinc-800 text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-zinc-700">
-          {isPlaying ? 'Pause Music' : 'Play Music'}
+          {isPlaying ? 'Pause Musik' : 'Play Musik'}
         </span>
       </button>
 
+      {/* BACKGROUND ELEMENTS */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-teal-500/10 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none"></div>
 
@@ -445,7 +530,6 @@ export default function App() {
       <section id="home" className="relative pt-32 pb-20 px-6 min-h-screen flex items-center">
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           
-          {/* KIRI: TEKS ANIMASI */}
           <div className="z-10 space-y-6">
             <p className="text-teal-400 font-semibold tracking-wider text-sm uppercase animate-fade-up" style={{ animationDelay: '100ms' }}>
               {t.hero.greeting}
@@ -453,25 +537,25 @@ export default function App() {
             
             <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight flex flex-wrap gap-x-4">
               {("Danial Gibran").split(' ').map((word, i) => (
-                <span key={i} className="animate-fade-up inline-block" style={{ animationDelay: `${200 + i * 150}ms` }}>
+                <span key={i} className="animate-fade-up inline-block" style={{ animationDelay: `${200 + i * 200}ms` }}>
                   {word}
                 </span>
               ))}
             </h1>
             
-            <h2 className="text-2xl md:text-3xl font-medium text-zinc-400 animate-fade-up" style={{ animationDelay: '400ms' }}>
+            <h2 className="text-2xl md:text-3xl font-medium text-zinc-400 animate-fade-up" style={{ animationDelay: '600ms' }}>
               {t.hero.rolePrefix} <span className="text-white border-b-2 border-teal-500 pb-1">Fullstack Dev & Cyber Security</span>
             </h2>
             
             <p className="text-zinc-400 leading-relaxed max-w-lg text-lg">
               {t.hero.desc.split(' ').map((word, i) => (
-                <span key={i} className="animate-fade-up inline-block mr-1.5" style={{ animationDelay: `${500 + i * 20}ms` }}>
+                <span key={i} className="animate-fade-up inline-block mr-1.5" style={{ animationDelay: `${800 + i * 50}ms` }}>
                   {word}
                 </span>
               ))}
             </p>
             
-            <div className="flex items-center space-x-4 pt-4 animate-fade-up" style={{ animationDelay: '800ms' }}>
+            <div className="flex items-center space-x-4 pt-4 animate-fade-up" style={{ animationDelay: '1500ms' }}>
               <a href="#projects" className="group flex items-center space-x-2 bg-teal-500/10 text-teal-400 border border-teal-500/50 px-6 py-3 rounded-full font-medium hover:bg-teal-500/20 transition-all">
                 <span>{t.hero.btnProject}</span>
                 <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -481,14 +565,13 @@ export default function App() {
               </a>
             </div>
 
-            <div className="flex items-center space-x-5 pt-8 text-zinc-500 animate-fade-up" style={{ animationDelay: '900ms' }}>
+            <div className="flex items-center space-x-5 pt-8 text-zinc-500 animate-fade-up" style={{ animationDelay: '1600ms' }}>
               <a href="https://github.com/danialg1" target="_blank" rel="noreferrer" className="hover:text-white transition-colors"><GithubIcon size={22} /></a>
               <a href="https://www.linkedin.com/in/danial-gibran-342370288" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors"><LinkedinIcon size={22} /></a>
               <a href="https://www.instagram.com/danial_g1bran" target="_blank" rel="noreferrer" className="hover:text-pink-500 transition-colors"><InstagramIcon size={22} /></a>
             </div>
           </div>
 
-          {/* KANAN: KARTU FOTO PREMIUM (Dengan Animasi Tuing-tuing & Efek KILAU/SHINE) */}
           <div className="hidden md:flex justify-center items-center h-full relative p-4 animate-spring">
             <div 
               ref={heroCardRef}
@@ -533,8 +616,7 @@ export default function App() {
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10 items-center">
             
-            {/* LANYARD DROP ANIMATION */}
-            <div className="hidden md:flex md:col-span-4 justify-center items-start h-full perspective-[1000px] mt-[-40px] select-none animate-on-scroll scroll-drop">
+            <div className="hidden md:flex md:col-span-4 justify-center items-start h-full perspective-[1000px] mt-[-40px] select-none scroll-drop">
               <div 
                 className="lanyard-swing flex flex-col items-center" 
                 style={{ 
@@ -588,7 +670,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* TEKS ABOUT */}
             <div className="md:col-span-8 flex flex-col justify-center space-y-8">
               <div className="animate-on-scroll">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
@@ -644,7 +725,7 @@ export default function App() {
             <div 
               key={project.id} 
               className={`group relative rounded-3xl overflow-hidden glass-card transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-500/10 animate-on-scroll ${idx === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}
-              style={{ transitionDelay: `${idx * 100}ms` }}
+              style={{ transitionDelay: `${idx * 150}ms` }}
             >
               <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all z-10"></div>
               <img 
@@ -674,7 +755,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Tech Stack Section (Animasi Pop-up Berantai) */}
+      {/* Tech Stack Section */}
       <section id="stack" className="py-20 px-6 relative">
         <div className="max-w-6xl mx-auto text-center mb-16 animate-on-scroll">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -689,7 +770,7 @@ export default function App() {
             <div 
               key={i} 
               className="glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 hover:bg-zinc-800/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(20,184,166,0.1)] group cursor-default animate-on-scroll"
-              style={{ transitionDelay: `${(i % 5) * 50}ms` }} /* Diakalin math-nya biar delay gak kelamaan nunggu baris bawah */
+              style={{ transitionDelay: `${(i % 5) * 50}ms` }}
             >
               <div className="p-3 bg-zinc-800/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
                 {tech.icon}
