@@ -19,7 +19,10 @@ import {
   Video,
   Scissors,
   Box,
-  Flame
+  Flame,
+  Music,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 
 // --- CUSTOM BRAND ICONS ---
@@ -151,7 +154,6 @@ const projectsData = [
   }
 ];
 
-// --- 15 TECH STACK ---
 const techStack = [
   { name: 'React', desc: 'FRONTEND LIB', icon: <Code2 size={24} className="text-blue-400" /> },
   { name: 'Tailwind', desc: 'CSS FRAMEWORK', icon: <Layout size={24} className="text-teal-400" /> },
@@ -174,15 +176,18 @@ export default function App() {
   const [lang, setLang] = useState('id');
   const t = dict[lang];
 
+  // STATE MUSIK
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
+
   const heroCardRef = useRef(null);
   const aboutLanyardRef = useRef(null);
   
-  // STATE UNTUK FITUR DRAG LANYARD
   const [dragPos, setDragPos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const dragStartPos = useRef({ x: 0, y: 0 });
   
-  // --- INTERSECTION OBSERVER (Animasi saat Scroll) ---
+  // --- OPTIMASI INTERSECTION OBSERVER ---
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -190,34 +195,43 @@ export default function App() {
           entry.target.classList.add('is-visible');
         }
       });
-    }, { threshold: 0.15 }); // 15% dari elemen terlihat, animasi mulai
+    }, { threshold: 0.1 }); 
 
     const elements = document.querySelectorAll('.animate-on-scroll');
     elements.forEach(el => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [lang]); // Re-run ketika ganti bahasa biar animasi gak ngebug
+  }, [lang]); 
 
-  // --- MOUSE PARALLAX EFFECT ---
+  // --- OPTIMASI MOUSE PARALLAX (Pakai requestAnimationFrame biar gak ngelag) ---
   useEffect(() => {
+    let animationFrameId;
     const handleMouseMove = (e) => {
-      const { clientX, clientY } = e;
-      const { innerWidth, innerHeight } = window;
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       
-      const xPos = (clientX / innerWidth - 0.5) * 15; 
-      const yPos = (clientY / innerHeight - 0.5) * -15;
-      
-      if (heroCardRef.current) {
-        heroCardRef.current.style.transform = `perspective(1000px) rotateY(${xPos}deg) rotateX(${yPos}deg)`;
-      }
-      if (aboutLanyardRef.current) {
-        aboutLanyardRef.current.style.transform = `perspective(1000px) rotateY(${xPos}deg) rotateX(${yPos}deg)`;
-      }
+      animationFrameId = requestAnimationFrame(() => {
+        const { clientX, clientY } = e;
+        const { innerWidth, innerHeight } = window;
+        
+        // Tilt lebih dikurangin dikit biar rendering browser lebih enteng
+        const xPos = (clientX / innerWidth - 0.5) * 12; 
+        const yPos = (clientY / innerHeight - 0.5) * -12;
+        
+        if (heroCardRef.current) {
+          heroCardRef.current.style.transform = `perspective(1000px) rotateY(${xPos}deg) rotateX(${yPos}deg)`;
+        }
+        if (aboutLanyardRef.current && !isDragging) {
+          aboutLanyardRef.current.style.transform = `perspective(1000px) rotateY(${xPos}deg) rotateX(${yPos}deg)`;
+        }
+      });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
+  }, [isDragging]);
 
   // --- LOGIKA DRAG ELASTIS ---
   const handleDragStart = (e) => {
@@ -232,18 +246,23 @@ export default function App() {
   };
 
   useEffect(() => {
+    let moveFrame;
     const handleDragMove = (e) => {
       if (!isDragging) return;
-      const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-      const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+      if (moveFrame) cancelAnimationFrame(moveFrame);
       
-      let newX = clientX - dragStartPos.current.x;
-      let newY = clientY - dragStartPos.current.y;
-      
-      newX = Math.max(-150, Math.min(150, newX));
-      newY = Math.max(-20, Math.min(200, newY)); 
-      
-      setDragPos({ x: newX, y: newY });
+      moveFrame = requestAnimationFrame(() => {
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        
+        let newX = clientX - dragStartPos.current.x;
+        let newY = clientY - dragStartPos.current.y;
+        
+        newX = Math.max(-150, Math.min(150, newX));
+        newY = Math.max(-20, Math.min(200, newY)); 
+        
+        setDragPos({ x: newX, y: newY });
+      });
     };
 
     const handleDragEnd = () => {
@@ -262,6 +281,7 @@ export default function App() {
       window.removeEventListener('mouseup', handleDragEnd);
       window.removeEventListener('touchmove', handleDragMove);
       window.removeEventListener('touchend', handleDragEnd);
+      if (moveFrame) cancelAnimationFrame(moveFrame);
     };
   }, [isDragging]);
 
@@ -270,14 +290,28 @@ export default function App() {
   const stringAngleRad = Math.atan2(dragPos.x, stringBaseHeight + dragPos.y);
   const stringAngleDeg = stringAngleRad * (180 / Math.PI);
 
+  // --- FUNGSI PLAY MUSIK ---
+  const toggleMusic = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden">
       
-      {/* CSS INJECTIONS UNTUK CUSTOM ANIMATION */}
+      {/* CSS INJECTIONS (DENGAN GPU ACCELERATION & SHINE EFFECT) */}
       <style dangerouslySetInnerHTML={{__html: `
         html { scroll-behavior: smooth; }
         
-        /* Efek Ayunan Tali */
+        /* GPU Acceleration untuk Animasi Lebih Ringan */
+        .glass-card, .lanyard-swing, .scroll-drop, .animate-on-scroll {
+          will-change: transform, opacity;
+        }
+        
         @keyframes swing {
           0%, 100% { transform: rotate(-3deg); }
           50% { transform: rotate(3deg); }
@@ -287,7 +321,6 @@ export default function App() {
           animation: swing 6s ease-in-out infinite;
         }
 
-        /* Glassmorphism Card */
         .glass-card {
           background: rgba(24, 24, 27, 0.6);
           backdrop-filter: blur(12px);
@@ -295,50 +328,89 @@ export default function App() {
           border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Animasi "Tuing-tuing" Spring Bounce untuk Foto Hero */
+        /* EFEK CAHAYA KILAU (SHINE/GLOW) SAAT HOVER FOTO */
+        .shine-container {
+          position: relative;
+          overflow: hidden;
+        }
+        .shine-container::after {
+          content: '';
+          position: absolute;
+          top: 0; 
+          left: -150%;
+          width: 50%; 
+          height: 100%;
+          background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(20, 184, 166, 0.4) 50%, rgba(255,255,255,0) 100%);
+          transform: skewX(-25deg);
+          transition: left 0.7s ease-in-out;
+          z-index: 10;
+          pointer-events: none;
+        }
+        .shine-container:hover::after {
+          left: 200%;
+        }
+
         @keyframes spring-bounce {
-          0% { transform: scale(0.6) translateY(50px); opacity: 0; }
-          60% { transform: scale(1.05) translateY(-10px); opacity: 1; }
+          0% { transform: scale(0.8) translateY(30px); opacity: 0; }
+          60% { transform: scale(1.02) translateY(-5px); opacity: 1; }
           100% { transform: scale(1) translateY(0); opacity: 1; }
         }
         .animate-spring {
           opacity: 0;
-          animation: spring-bounce 1.2s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
-          animation-delay: 0.2s;
+          animation: spring-bounce 1s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
+          animation-delay: 0.1s;
         }
 
-        /* Animasi Fade Up untuk Teks */
         @keyframes fade-up {
-          from { transform: translateY(30px); opacity: 0; }
+          from { transform: translateY(20px); opacity: 0; }
           to { transform: translateY(0); opacity: 1; }
         }
         .animate-fade-up {
           opacity: 0;
-          animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* Animasi Scroll Umum */
         .animate-on-scroll {
           opacity: 0;
-          transform: translateY(40px);
-          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+          transform: translateY(30px);
+          transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .animate-on-scroll.is-visible {
           opacity: 1;
           transform: translateY(0);
         }
 
-        /* Animasi Khusus Lanyard Jatuh (Scroll Drop) */
         .scroll-drop {
           opacity: 0;
-          transform: translateY(-150px) scale(0.9) rotate(-10deg);
-          transition: opacity 1.2s ease-out, transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+          transform: translateY(-100px) scale(0.9) rotate(-10deg);
+          transition: opacity 1s ease-out, transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .scroll-drop.is-visible {
           opacity: 1;
           transform: translateY(0) scale(1) rotate(0deg);
         }
       `}} />
+
+      {/* AUDIO ELEMENT (Lo-fi Background Music) */}
+      <audio ref={audioRef} loop>
+        <source src="musik1.mp3" type="audio/mpeg" />
+      </audio>
+
+      {/* FLOATING MUSIC BUTTON */}
+      <button 
+        onClick={toggleMusic}
+        className="fixed bottom-6 right-6 z-50 p-4 rounded-full glass-card border border-teal-500/30 text-teal-400 hover:bg-teal-500/20 hover:scale-110 transition-all duration-300 shadow-[0_0_20px_rgba(20,184,166,0.2)] group"
+      >
+        {isPlaying ? (
+          <Volume2 size={24} className="animate-pulse" />
+        ) : (
+          <VolumeX size={24} />
+        )}
+        {/* Tooltip */}
+        <span className="absolute right-16 bg-zinc-800 text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-zinc-700">
+          {isPlaying ? 'Pause Music' : 'Play Music'}
+        </span>
+      </button>
 
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-teal-500/10 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none"></div>
@@ -379,7 +451,6 @@ export default function App() {
               {t.hero.greeting}
             </p>
             
-            {/* Animasi Nama Per-Kata */}
             <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight flex flex-wrap gap-x-4">
               {("Danial Gibran").split(' ').map((word, i) => (
                 <span key={i} className="animate-fade-up inline-block" style={{ animationDelay: `${200 + i * 150}ms` }}>
@@ -388,20 +459,19 @@ export default function App() {
               ))}
             </h1>
             
-            <h2 className="text-2xl md:text-3xl font-medium text-zinc-400 animate-fade-up" style={{ animationDelay: '500ms' }}>
+            <h2 className="text-2xl md:text-3xl font-medium text-zinc-400 animate-fade-up" style={{ animationDelay: '400ms' }}>
               {t.hero.rolePrefix} <span className="text-white border-b-2 border-teal-500 pb-1">Fullstack Dev & Cyber Security</span>
             </h2>
             
-            {/* Animasi Deskripsi Per-Kata */}
             <p className="text-zinc-400 leading-relaxed max-w-lg text-lg">
               {t.hero.desc.split(' ').map((word, i) => (
-                <span key={i} className="animate-fade-up inline-block mr-1.5" style={{ animationDelay: `${600 + i * 20}ms` }}>
+                <span key={i} className="animate-fade-up inline-block mr-1.5" style={{ animationDelay: `${500 + i * 20}ms` }}>
                   {word}
                 </span>
               ))}
             </p>
             
-            <div className="flex items-center space-x-4 pt-4 animate-fade-up" style={{ animationDelay: '1000ms' }}>
+            <div className="flex items-center space-x-4 pt-4 animate-fade-up" style={{ animationDelay: '800ms' }}>
               <a href="#projects" className="group flex items-center space-x-2 bg-teal-500/10 text-teal-400 border border-teal-500/50 px-6 py-3 rounded-full font-medium hover:bg-teal-500/20 transition-all">
                 <span>{t.hero.btnProject}</span>
                 <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -411,18 +481,18 @@ export default function App() {
               </a>
             </div>
 
-            <div className="flex items-center space-x-5 pt-8 text-zinc-500 animate-fade-up" style={{ animationDelay: '1100ms' }}>
+            <div className="flex items-center space-x-5 pt-8 text-zinc-500 animate-fade-up" style={{ animationDelay: '900ms' }}>
               <a href="https://github.com/danialg1" target="_blank" rel="noreferrer" className="hover:text-white transition-colors"><GithubIcon size={22} /></a>
               <a href="https://www.linkedin.com/in/danial-gibran-342370288" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors"><LinkedinIcon size={22} /></a>
               <a href="https://www.instagram.com/danial_g1bran" target="_blank" rel="noreferrer" className="hover:text-pink-500 transition-colors"><InstagramIcon size={22} /></a>
             </div>
           </div>
 
-          {/* KANAN: KARTU FOTO PREMIUM ("Tuing-tuing" Animation) */}
+          {/* KANAN: KARTU FOTO PREMIUM (Dengan Animasi Tuing-tuing & Efek KILAU/SHINE) */}
           <div className="hidden md:flex justify-center items-center h-full relative p-4 animate-spring">
             <div 
               ref={heroCardRef}
-              className="relative w-full max-w-[400px] aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-[0_0_50px_rgba(20,184,166,0.15)] group transition-transform duration-100 ease-out"
+              className="shine-container relative w-full max-w-[400px] aspect-[3/4] rounded-[2.5rem] shadow-[0_0_50px_rgba(20,184,166,0.15)] group transition-transform duration-100 ease-out"
             >
               <img 
                 src="/profil.jpg" 
@@ -446,7 +516,7 @@ export default function App() {
                   </div>
                 </div>
                 
-                <a href="#contact" className="text-xs font-semibold bg-zinc-800 border border-zinc-700 hover:bg-teal-500 hover:text-zinc-900 hover:border-teal-400 text-white px-4 py-2.5 rounded-xl transition-all duration-300">
+                <a href="#contact" className="text-xs font-semibold bg-zinc-800 border border-zinc-700 hover:bg-teal-500 hover:text-zinc-900 hover:border-teal-400 text-white px-4 py-2.5 rounded-xl transition-all duration-300 relative z-20">
                   Contact Me
                 </a>
               </div>
@@ -463,7 +533,7 @@ export default function App() {
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10 items-center">
             
-            {/* LANYARD DROP ANIMATION (Jatuh dari atas pas scroll) */}
+            {/* LANYARD DROP ANIMATION */}
             <div className="hidden md:flex md:col-span-4 justify-center items-start h-full perspective-[1000px] mt-[-40px] select-none animate-on-scroll scroll-drop">
               <div 
                 className="lanyard-swing flex flex-col items-center" 
@@ -518,7 +588,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* TEKS ABOUT (Fade Up On Scroll) */}
+            {/* TEKS ABOUT */}
             <div className="md:col-span-8 flex flex-col justify-center space-y-8">
               <div className="animate-on-scroll">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
@@ -533,7 +603,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 border-t border-zinc-800/50 pt-6 animate-on-scroll" style={{ transitionDelay: '200ms' }}>
+              <div className="grid grid-cols-3 gap-4 border-t border-zinc-800/50 pt-6 animate-on-scroll" style={{ transitionDelay: '100ms' }}>
                 <div>
                   <h4 className="text-3xl font-bold text-teal-400 mb-1">3+</h4>
                   <p className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase">{t.about.exp}</p>
@@ -543,12 +613,12 @@ export default function App() {
                   <p className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase">{t.about.proj}</p>
                 </div>
                 <div>
-                  <h4 className="text-3xl font-bold text-purple-400 mb-1">4+</h4>
+                  <h4 className="text-3xl font-bold text-purple-400 mb-1">15+</h4>
                   <p className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase">{t.about.client}</p>
                 </div>
               </div>
               
-              <div className="pt-2 animate-on-scroll" style={{ transitionDelay: '400ms' }}>
+              <div className="pt-2 animate-on-scroll" style={{ transitionDelay: '200ms' }}>
                 <button className="flex items-center space-x-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white px-6 py-3 rounded-full transition-all text-sm font-medium">
                   <span>{t.about.cv}</span>
                   <Download size={16} />
@@ -574,7 +644,7 @@ export default function App() {
             <div 
               key={project.id} 
               className={`group relative rounded-3xl overflow-hidden glass-card transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-500/10 animate-on-scroll ${idx === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}
-              style={{ transitionDelay: `${idx * 150}ms` }}
+              style={{ transitionDelay: `${idx * 100}ms` }}
             >
               <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all z-10"></div>
               <img 
@@ -619,7 +689,7 @@ export default function App() {
             <div 
               key={i} 
               className="glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 hover:bg-zinc-800/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(20,184,166,0.1)] group cursor-default animate-on-scroll"
-              style={{ transitionDelay: `${i * 50}ms` }} /* Ini yang bikin pop-up berurutan */
+              style={{ transitionDelay: `${(i % 5) * 50}ms` }} /* Diakalin math-nya biar delay gak kelamaan nunggu baris bawah */
             >
               <div className="p-3 bg-zinc-800/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
                 {tech.icon}
@@ -643,7 +713,7 @@ export default function App() {
             <p className="text-zinc-400">{t.contact.subtitle}</p>
           </div>
 
-          <div className="glass-card rounded-3xl p-1 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(20,184,166,0.1)] transition-shadow duration-500 animate-on-scroll" style={{ transitionDelay: '200ms' }}>
+          <div className="glass-card rounded-3xl p-1 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(20,184,166,0.1)] transition-shadow duration-500 animate-on-scroll" style={{ transitionDelay: '100ms' }}>
             <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 via-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl"></div>
             
             <div className="bg-[#0f0f12]/90 backdrop-blur-2xl rounded-[23px] p-8 md:p-12 relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12">
