@@ -23,7 +23,6 @@ import {
 } from 'lucide-react';
 
 // --- CUSTOM BRAND ICONS ---
-// (Kita bikin manual karena library lucide-react udah gak support logo brand demi hak cipta)
 const GithubIcon = ({ size = 24, className = "" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.03c3.18-.35 6.5-1.5 6.5-7.1a5.8 5.8 0 0 0-1.6-4.03a5.5 5.5 0 0 0-.15-4.03s-1.3-.4-4.2 1.6a14.8 14.8 0 0 0-8 0c-2.9-2-4.2-1.6-4.2-1.6a5.5 5.5 0 0 0-.15 4.03 5.8 5.8 0 0 0-1.6 4.03c0 5.6 3.3 6.7 6.5 7.1a4.8 4.8 0 0 0-1 3.03v4"></path></svg>
 );
@@ -152,7 +151,7 @@ const projectsData = [
   }
 ];
 
-// --- 15 TECH STACK DENGAN ICON UPDATE ---
+// --- 15 TECH STACK ---
 const techStack = [
   { name: 'React', desc: 'FRONTEND LIB', icon: <Code2 size={24} className="text-blue-400" /> },
   { name: 'Tailwind', desc: 'CSS FRAMEWORK', icon: <Layout size={24} className="text-teal-400" /> },
@@ -175,15 +174,31 @@ export default function App() {
   const [lang, setLang] = useState('id');
   const t = dict[lang];
 
-  // Refs untuk efek Mouse Parallax 3D
   const heroCardRef = useRef(null);
   const aboutLanyardRef = useRef(null);
   
-  // STATE UNTUK FITUR DRAG LANYARD (ELASTIC PHYSICS)
+  // STATE UNTUK FITUR DRAG LANYARD
   const [dragPos, setDragPos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const dragStartPos = useRef({ x: 0, y: 0 });
   
+  // --- INTERSECTION OBSERVER (Animasi saat Scroll) ---
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.15 }); // 15% dari elemen terlihat, animasi mulai
+
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    elements.forEach(el => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [lang]); // Re-run ketika ganti bahasa biar animasi gak ngebug
+
+  // --- MOUSE PARALLAX EFFECT ---
   useEffect(() => {
     const handleMouseMove = (e) => {
       const { clientX, clientY } = e;
@@ -204,7 +219,7 @@ export default function App() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // --- LOGIKA DRAG ELASTIS (LANYARD ABOUT) ---
+  // --- LOGIKA DRAG ELASTIS ---
   const handleDragStart = (e) => {
     if (e.cancelable) e.preventDefault();
     setIsDragging(true);
@@ -257,8 +272,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden">
+      
+      {/* CSS INJECTIONS UNTUK CUSTOM ANIMATION */}
       <style dangerouslySetInnerHTML={{__html: `
         html { scroll-behavior: smooth; }
+        
+        /* Efek Ayunan Tali */
         @keyframes swing {
           0%, 100% { transform: rotate(-3deg); }
           50% { transform: rotate(3deg); }
@@ -267,11 +286,57 @@ export default function App() {
           transform-origin: top center;
           animation: swing 6s ease-in-out infinite;
         }
+
+        /* Glassmorphism Card */
         .glass-card {
           background: rgba(24, 24, 27, 0.6);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
           border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Animasi "Tuing-tuing" Spring Bounce untuk Foto Hero */
+        @keyframes spring-bounce {
+          0% { transform: scale(0.6) translateY(50px); opacity: 0; }
+          60% { transform: scale(1.05) translateY(-10px); opacity: 1; }
+          100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .animate-spring {
+          opacity: 0;
+          animation: spring-bounce 1.2s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
+          animation-delay: 0.2s;
+        }
+
+        /* Animasi Fade Up untuk Teks */
+        @keyframes fade-up {
+          from { transform: translateY(30px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-fade-up {
+          opacity: 0;
+          animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Animasi Scroll Umum */
+        .animate-on-scroll {
+          opacity: 0;
+          transform: translateY(40px);
+          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .animate-on-scroll.is-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* Animasi Khusus Lanyard Jatuh (Scroll Drop) */
+        .scroll-drop {
+          opacity: 0;
+          transform: translateY(-150px) scale(0.9) rotate(-10deg);
+          transition: opacity 1.2s ease-out, transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .scroll-drop.is-visible {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0deg);
         }
       `}} />
 
@@ -279,7 +344,7 @@ export default function App() {
       <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none"></div>
 
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b-0 border-x-0 border-t-0 border-b-zinc-800/50 px-6 py-4">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b-0 border-x-0 border-t-0 border-b-zinc-800/50 px-6 py-4 animate-fade-up" style={{ animationDelay: '0ms' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="text-2xl font-bold text-white tracking-tighter">
             Danial<span className="text-teal-400">.</span>
@@ -308,21 +373,35 @@ export default function App() {
       <section id="home" className="relative pt-32 pb-20 px-6 min-h-screen flex items-center">
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           
+          {/* KIRI: TEKS ANIMASI */}
           <div className="z-10 space-y-6">
-            <p className="text-teal-400 font-semibold tracking-wider text-sm uppercase">
+            <p className="text-teal-400 font-semibold tracking-wider text-sm uppercase animate-fade-up" style={{ animationDelay: '100ms' }}>
               {t.hero.greeting}
             </p>
-            <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight">
-              Danial Gibran
+            
+            {/* Animasi Nama Per-Kata */}
+            <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight flex flex-wrap gap-x-4">
+              {("Danial Gibran").split(' ').map((word, i) => (
+                <span key={i} className="animate-fade-up inline-block" style={{ animationDelay: `${200 + i * 150}ms` }}>
+                  {word}
+                </span>
+              ))}
             </h1>
-            <h2 className="text-2xl md:text-3xl font-medium text-zinc-400">
+            
+            <h2 className="text-2xl md:text-3xl font-medium text-zinc-400 animate-fade-up" style={{ animationDelay: '500ms' }}>
               {t.hero.rolePrefix} <span className="text-white border-b-2 border-teal-500 pb-1">Fullstack Dev & Cyber Security</span>
             </h2>
+            
+            {/* Animasi Deskripsi Per-Kata */}
             <p className="text-zinc-400 leading-relaxed max-w-lg text-lg">
-              {t.hero.desc}
+              {t.hero.desc.split(' ').map((word, i) => (
+                <span key={i} className="animate-fade-up inline-block mr-1.5" style={{ animationDelay: `${600 + i * 20}ms` }}>
+                  {word}
+                </span>
+              ))}
             </p>
             
-            <div className="flex items-center space-x-4 pt-4">
+            <div className="flex items-center space-x-4 pt-4 animate-fade-up" style={{ animationDelay: '1000ms' }}>
               <a href="#projects" className="group flex items-center space-x-2 bg-teal-500/10 text-teal-400 border border-teal-500/50 px-6 py-3 rounded-full font-medium hover:bg-teal-500/20 transition-all">
                 <span>{t.hero.btnProject}</span>
                 <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -332,14 +411,15 @@ export default function App() {
               </a>
             </div>
 
-            <div className="flex items-center space-x-5 pt-8 text-zinc-500">
+            <div className="flex items-center space-x-5 pt-8 text-zinc-500 animate-fade-up" style={{ animationDelay: '1100ms' }}>
               <a href="https://github.com/danialg1" target="_blank" rel="noreferrer" className="hover:text-white transition-colors"><GithubIcon size={22} /></a>
               <a href="https://www.linkedin.com/in/danial-gibran-342370288" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors"><LinkedinIcon size={22} /></a>
               <a href="https://www.instagram.com/danial_g1bran" target="_blank" rel="noreferrer" className="hover:text-pink-500 transition-colors"><InstagramIcon size={22} /></a>
             </div>
           </div>
 
-          <div className="hidden md:flex justify-center items-center h-full relative p-4">
+          {/* KANAN: KARTU FOTO PREMIUM ("Tuing-tuing" Animation) */}
+          <div className="hidden md:flex justify-center items-center h-full relative p-4 animate-spring">
             <div 
               ref={heroCardRef}
               className="relative w-full max-w-[400px] aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-[0_0_50px_rgba(20,184,166,0.15)] group transition-transform duration-100 ease-out"
@@ -377,13 +457,14 @@ export default function App() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 px-6 relative">
-        <div className="max-w-5xl mx-auto glass-card rounded-3xl p-8 md:p-12 relative overflow-hidden">
+      <section id="about" className="py-20 px-6 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto glass-card rounded-3xl p-8 md:p-12 relative">
           <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 rounded-full blur-[80px]"></div>
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10 items-center">
             
-            <div className="hidden md:flex md:col-span-4 justify-center items-start h-full perspective-[1000px] mt-[-40px] select-none">
+            {/* LANYARD DROP ANIMATION (Jatuh dari atas pas scroll) */}
+            <div className="hidden md:flex md:col-span-4 justify-center items-start h-full perspective-[1000px] mt-[-40px] select-none animate-on-scroll scroll-drop">
               <div 
                 className="lanyard-swing flex flex-col items-center" 
                 style={{ 
@@ -437,8 +518,9 @@ export default function App() {
               </div>
             </div>
 
+            {/* TEKS ABOUT (Fade Up On Scroll) */}
             <div className="md:col-span-8 flex flex-col justify-center space-y-8">
-              <div>
+              <div className="animate-on-scroll">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
                   {t.about.title.split(' ')[0]} <span className="text-teal-400">{t.about.title.split(' ')[1] || ''}</span>
                 </h2>
@@ -451,7 +533,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 border-t border-zinc-800/50 pt-6">
+              <div className="grid grid-cols-3 gap-4 border-t border-zinc-800/50 pt-6 animate-on-scroll" style={{ transitionDelay: '200ms' }}>
                 <div>
                   <h4 className="text-3xl font-bold text-teal-400 mb-1">3+</h4>
                   <p className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase">{t.about.exp}</p>
@@ -461,12 +543,12 @@ export default function App() {
                   <p className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase">{t.about.proj}</p>
                 </div>
                 <div>
-                  <h4 className="text-3xl font-bold text-purple-400 mb-1">15+</h4>
+                  <h4 className="text-3xl font-bold text-purple-400 mb-1">4+</h4>
                   <p className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase">{t.about.client}</p>
                 </div>
               </div>
               
-              <div className="pt-2">
+              <div className="pt-2 animate-on-scroll" style={{ transitionDelay: '400ms' }}>
                 <button className="flex items-center space-x-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white px-6 py-3 rounded-full transition-all text-sm font-medium">
                   <span>{t.about.cv}</span>
                   <Download size={16} />
@@ -480,7 +562,7 @@ export default function App() {
 
       {/* Projects Section */}
       <section id="projects" className="py-20 px-6">
-        <div className="max-w-7xl mx-auto text-center mb-16">
+        <div className="max-w-7xl mx-auto text-center mb-16 animate-on-scroll">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {t.projects.title.split(' ')[0]} <span className="text-teal-400">{t.projects.title.split(' ')[1]}</span>
           </h2>
@@ -489,7 +571,11 @@ export default function App() {
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {projectsData.map((project, idx) => (
-            <div key={project.id} className={`group relative rounded-3xl overflow-hidden glass-card transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-500/10 ${idx === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}>
+            <div 
+              key={project.id} 
+              className={`group relative rounded-3xl overflow-hidden glass-card transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-500/10 animate-on-scroll ${idx === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}
+              style={{ transitionDelay: `${idx * 150}ms` }}
+            >
               <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all z-10"></div>
               <img 
                 src={project.img} 
@@ -518,9 +604,9 @@ export default function App() {
         </div>
       </section>
 
-      {/* Tech Stack Section */}
+      {/* Tech Stack Section (Animasi Pop-up Berantai) */}
       <section id="stack" className="py-20 px-6 relative">
-        <div className="max-w-6xl mx-auto text-center mb-16">
+        <div className="max-w-6xl mx-auto text-center mb-16 animate-on-scroll">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             {t.stack.title.split(' ')[0]} <span className="text-teal-400">& {t.stack.title.split(' ').slice(2).join(' ')}</span>
           </h2>
@@ -530,7 +616,11 @@ export default function App() {
 
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-4">
           {techStack.map((tech, i) => (
-            <div key={i} className="glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 hover:bg-zinc-800/50 transition-colors group cursor-default">
+            <div 
+              key={i} 
+              className="glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 hover:bg-zinc-800/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(20,184,166,0.1)] group cursor-default animate-on-scroll"
+              style={{ transitionDelay: `${i * 50}ms` }} /* Ini yang bikin pop-up berurutan */
+            >
               <div className="p-3 bg-zinc-800/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
                 {tech.icon}
               </div>
@@ -546,14 +636,14 @@ export default function App() {
       {/* Contact Section */}
       <section id="contact" className="py-20 px-6 relative">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 animate-on-scroll">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               {t.contact.title.split(' ')[0]} <span className="text-teal-400">{t.contact.title.split(' ').slice(1).join(' ')}</span>
             </h2>
             <p className="text-zinc-400">{t.contact.subtitle}</p>
           </div>
 
-          <div className="glass-card rounded-3xl p-1 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(20,184,166,0.1)] transition-shadow duration-500">
+          <div className="glass-card rounded-3xl p-1 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(20,184,166,0.1)] transition-shadow duration-500 animate-on-scroll" style={{ transitionDelay: '200ms' }}>
             <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 via-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl"></div>
             
             <div className="bg-[#0f0f12]/90 backdrop-blur-2xl rounded-[23px] p-8 md:p-12 relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -641,7 +731,7 @@ export default function App() {
       </section>
 
       <footer className="py-8 px-6 border-t border-zinc-800/50 mt-10 relative">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center animate-on-scroll">
           <div className="mb-4 md:mb-0 text-center md:text-left">
             <div className="text-xl font-bold text-white tracking-tighter">
               Danial<span className="text-teal-400">.</span>
