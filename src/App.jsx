@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Mail, 
   ChevronRight, 
@@ -108,6 +108,143 @@ const TypingText = ({ text }) => {
         </span>
       ))}
     </p>
+  );
+};
+
+// ============ TERMINAL TEXT COMPONENT ============
+const TerminalText = ({
+  text,
+  className = "",
+  typingSpeed = 40,
+  glitchChance = 0.08,
+  loop = true
+}) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isGlitching, setIsGlitching] = useState(false);
+  const [showCursor, setShowCursor] = useState(true);
+
+  const glitchChars = '█▓░▒█#$%&@!?';
+
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 530);
+    return () => clearInterval(cursorInterval);
+  }, []);
+
+  useEffect(() => {
+    if (currentIndex >= text.length) {
+      if (loop) {
+        const pauseTimer = setTimeout(() => setCurrentIndex(0), 2500);
+        return () => clearTimeout(pauseTimer);
+      }
+      return;
+    }
+
+    const shouldGlitch = Math.random() < glitchChance;
+
+    if (shouldGlitch) {
+      setIsGlitching(true);
+      const glitchTimer = setTimeout(() => {
+        setDisplayedText(text.slice(0, currentIndex + 1));
+        setCurrentIndex(prev => prev + 1);
+        setIsGlitching(false);
+      }, 60 + Math.random() * 40);
+      return () => clearTimeout(glitchTimer);
+    } else {
+      const timer = setTimeout(() => {
+        setDisplayedText(text.slice(0, currentIndex + 1));
+        setCurrentIndex(prev => prev + 1);
+      }, typingSpeed + Math.random() * 20);
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, text, typingSpeed, glitchChance, loop]);
+
+  return (
+    <span className={`terminal-text inline ${className}`}>
+      <span className={isGlitching ? 'glitch-char' : ''}>
+        {displayedText}
+      </span>
+      {currentIndex < text.length ? (
+        <span className="cursor" style={{ color: '#14b8a6', textShadow: '0 0 8px rgba(20,184,166,0.8)' }}>
+          █
+        </span>
+      ) : showCursor && (
+        <span className="cursor" style={{ color: '#14b8a6', textShadow: '0 0 8px rgba(20,184,166,0.8)' }}>
+          █
+        </span>
+      )}
+    </span>
+  );
+};
+
+// ============ TILT CARD COMPONENT ============
+const TiltCard = ({
+  children,
+  className = "",
+  tiltStrength = 10,
+  glareOpacity = 0.15,
+  glareColor = '20, 184, 166'
+}) => {
+  const cardRef = useRef(null);
+  const [transform, setTransform] = useState({ x: 0, y: 0 });
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = useCallback((e) => {
+    if (!cardRef.current) return;
+
+    requestAnimationFrame(() => {
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateY = ((x - centerX) / centerX) * tiltStrength;
+      const rotateX = ((y - centerY) / centerY) * -tiltStrength;
+
+      setTransform({ x: rotateX, y: rotateY });
+      setMousePos({ x, y });
+    });
+  }, [tiltStrength]);
+
+  const handleMouseLeave = () => {
+    setTransform({ x: 0, y: 0 });
+    setIsHovered(false);
+  };
+
+  const handleMouseEnter = () => setIsHovered(true);
+
+  return (
+    <div
+      ref={cardRef}
+      className={`tilt-card-container relative ${className}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handleMouseEnter}
+    >
+      <div
+        style={{
+          transform: `perspective(1000px) rotateX(${transform.x}deg) rotateY(${transform.y}deg) scale3d(${isHovered ? 1.02 : 1}, ${isHovered ? 1.02 : 1}, 1)`,
+          transformStyle: 'preserve-3d',
+          willChange: 'transform',
+          transition: isHovered ? 'none' : 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'
+        }}
+        className="tilt-card"
+      >
+        <div className="tilt-card-inner">{children}</div>
+      </div>
+      <div
+        style={{
+          background: `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, rgba(${glareColor},${glareOpacity}) 0%, transparent 50%)`,
+          opacity: isHovered ? 1 : 0,
+          transition: 'opacity 0.3s ease'
+        }}
+        className="tilt-card-glare"
+      ></div>
+    </div>
   );
 };
 
@@ -495,6 +632,49 @@ export default function App() {
           opacity: 1;
           transform: translateY(0) scale(1) rotate(0deg);
         }
+
+        /* === TERMINAL TEXT STYLES === */
+        @keyframes terminal-cursor-blink {
+          0%, 49% { opacity: 1; text-shadow: 0 0 8px currentColor; }
+          50%, 100% { opacity: 0; }
+        }
+        .terminal-text {
+          font-family: 'Courier New', Consolas, monospace;
+        }
+        .terminal-text .cursor {
+          animation: terminal-cursor-blink 1.06s infinite;
+        }
+        .terminal-text .glitch-char {
+          color: #22d3ee;
+          text-shadow: 0 0 12px rgba(34, 211, 238, 0.7);
+        }
+
+        /* === TILT CARD STYLES === */
+        .tilt-card-container {
+          transform-style: preserve-3d;
+        }
+        .tilt-card {
+          transform-style: preserve-3d;
+          will-change: transform;
+        }
+        .tilt-card-inner {
+          transform: translateZ(30px);
+        }
+        .tilt-card-glare {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          mix-blend-mode: overlay;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          border-radius: inherit;
+          z-index: 30;
+        }
+        .tilt-card-container:hover .tilt-card {
+          box-shadow:
+            0 25px 50px -12px rgba(0, 0, 0, 0.5),
+            0 0 40px rgba(20, 184, 166, 0.15);
+        }
       `}} />
 
       {/* AUDIO KICAU MANIA */}
@@ -606,13 +786,12 @@ export default function App() {
               {t.hero.rolePrefix} <span className="text-white border-b-2 border-teal-500 pb-1">Fullstack Dev & Cyber Security</span>
             </h2>
             
-            <p className="text-zinc-400 leading-relaxed max-w-lg text-lg">
-              {t.hero.desc.split(' ').map((word, i) => (
-                <span key={i} className="animate-fade-up inline-block mr-1.5" style={{ animationDelay: `${800 + i * 50}ms` }}>
-                  {word}
-                </span>
-              ))}
-            </p>
+            <TerminalText
+              text={t.hero.desc}
+              className="text-zinc-400 leading-relaxed max-w-lg text-lg"
+              typingSpeed={35}
+              glitchChance={0.1}
+            />
             
             <div className="flex items-center space-x-4 pt-4 animate-fade-up" style={{ animationDelay: '1500ms' }}>
               <a href="#projects" className="group flex items-center space-x-2 bg-teal-500/10 text-teal-400 border border-teal-500/50 px-6 py-3 rounded-full font-medium hover:bg-teal-500/20 transition-all">
@@ -841,15 +1020,15 @@ export default function App() {
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {projectsData.map((project, idx) => (
-            <div 
-              key={project.id} 
-              className={`group relative rounded-3xl overflow-hidden glass-card transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-500/10 animate-on-scroll ${idx === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}
-              style={{ transitionDelay: `${idx * 150}ms` }}
+            <TiltCard
+              className={`group relative rounded-3xl overflow-hidden glass-card animate-on-scroll ${idx === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}
+              tiltStrength={10}
+              glareOpacity={0.12}
             >
               <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all z-10"></div>
-              <img 
-                src={project.img} 
-                alt={project.title[lang]} 
+              <img
+                src={project.img}
+                alt={project.title[lang]}
                 className={`w-full object-cover transition-transform duration-700 group-hover:scale-105 ${idx === 0 ? 'h-full min-h-[400px]' : 'h-64'}`}
               />
               <div className="absolute inset-0 flex flex-col justify-end p-6 z-20 bg-gradient-to-t from-[#09090b] via-[#09090b]/80 to-transparent">
@@ -869,7 +1048,7 @@ export default function App() {
                   </button>
                 </div>
               </div>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </section>
