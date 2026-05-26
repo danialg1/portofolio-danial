@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { db } from './firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import { 
   Mail, 
   ChevronRight, 
@@ -336,30 +338,6 @@ const dict = {
   }
 };
 
-const projectsData = [
-  {
-    id: 1,
-    title: { id: 'Dashboard Analitik Keamanan', en: 'Security Analytics Dashboard' },
-    desc: { id: 'Visualisasi log server & deteksi anomali real-time.', en: 'Server log visualization & real-time anomaly detection.' },
-    tags: ['React', 'Node.js', 'Elasticsearch'],
-    img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 2,
-    title: { id: 'E-Commerce Skala Besar', en: 'Large Scale E-Commerce' },
-    desc: { id: 'Platform e-commerce dengan sistem pembayaran yang dienkripsi ketat.', en: 'E-commerce platform with strictly encrypted payment systems.' },
-    tags: ['Next.js', 'Tailwind', 'PostgreSQL'],
-    img: 'https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 3,
-    title: { id: 'Alat Penetration Testing', en: 'Penetration Testing Tool' },
-    desc: { id: 'CLI tool untuk memindai kerentanan web OWASP Top 10.', en: 'CLI tool to scan for OWASP Top 10 web vulnerabilities.' },
-    tags: ['Python', 'Bash', 'Cyber Security'],
-    img: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800'
-  }
-];
-
 // --- 15 TECH STACK BESERTA DESKRIPSI DETAIL UNTUK POP-UP ---
 const techStack = [
   { name: 'React', desc: 'FRONTEND LIB', details: 'Library andalan saya untuk membangun antarmuka pengguna yang interaktif, reaktif, dan komponen-based. Sangat optimal untuk merender data dinamis secara real-time.', icon: <Code2 size={24} className="text-blue-400" /> },
@@ -388,7 +366,8 @@ export default function App() {
   const [isSplashExiting, setIsSplashExiting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hoveredTech, setHoveredTech] = useState(null); // State Popup Tengah Layar
-  
+  const [projectsData, setProjectsData] = useState([]);
+
   const audioRef = useRef(null);
   const heroCardRef = useRef(null);
   const aboutLanyardRef = useRef(null);
@@ -416,7 +395,7 @@ export default function App() {
   
   // OBSERVER UNTUK ANIMASI SCROLL
   useEffect(() => {
-    if (showSplash) return; 
+    if (showSplash) return;
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -424,7 +403,7 @@ export default function App() {
           entry.target.classList.add('is-visible');
         }
       });
-    }, { threshold: 0.1 }); 
+    }, { threshold: 0.1 });
 
     const timer = setTimeout(() => {
       const elements = document.querySelectorAll('.animate-on-scroll, .scroll-drop');
@@ -435,7 +414,25 @@ export default function App() {
       clearTimeout(timer);
       observer.disconnect();
     };
-  }, [lang, showSplash]); 
+  }, [lang, showSplash]);
+
+  // FETCH PROJECTS FROM FIREBASE
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'projects'));
+        const projects = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setProjectsData(projects);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchProjects();
+  }, []); 
 
   // MOUSE PARALLAX EFFECT HERO
   useEffect(() => {
