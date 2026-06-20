@@ -27,335 +27,12 @@ import {
   Play
 } from 'lucide-react';
 
-// --- CUSTOM BRAND ICONS ---
-const GithubIcon = ({ size = 24, className = "" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.03c3.18-.35 6.5-1.5 6.5-7.1a5.8 5.8 0 0 0-1.6-4.03a5.5 5.5 0 0 0-.15-4.03s-1.3-.4-4.2 1.6a14.8 14.8 0 0 0-8 0c-2.9-2-4.2-1.6-4.2-1.6a5.5 5.5 0 0 0-.15 4.03 5.8 5.8 0 0 0-1.6 4.03c0 5.6 3.3 6.7 6.5 7.1a4.8 4.8 0 0 0-1 3.03v4"></path></svg>
-);
-
-const LinkedinIcon = ({ size = 24, className = "" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-);
-
-const InstagramIcon = ({ size = 24, className = "" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-);
-
-const FigmaIcon = ({ size = 24, className = "" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"></path><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"></path><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"></path><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"></path><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"></path></svg>
-);
-
-// --- KOMPONEN ANIMASI ANGKA (COUNT UP) ---
-const AnimatedCounter = ({ target, suffix }) => {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIsVisible(true);
-        observer.disconnect();
-      }
-    }, { threshold: 0.1 });
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!isVisible) return;
-    let start = 0;
-    const duration = 2000; // 2 detik hitung
-    const increment = target / (duration / 16);
-
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(Math.ceil(start));
-      }
-    }, 16);
-    return () => clearInterval(timer);
-  }, [isVisible, target]);
-
-  return <span ref={ref}>{count}{suffix}</span>;
-};
-
-// --- KOMPONEN ANIMASI TYPING KATA PER KATA ---
-const TypingText = ({ text }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIsVisible(true);
-        observer.disconnect();
-      }
-    }, { threshold: 0.1 });
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <p ref={ref} className="text-zinc-400 leading-relaxed text-sm md:text-base">
-      {text.split(' ').map((word, i) => (
-        <span
-          key={i}
-          className={`inline-block mr-1.5 transition-all duration-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          style={{ transitionDelay: `${i * 30}ms` }}
-        >
-          {word}
-        </span>
-      ))}
-    </p>
-  );
-};
-
-// ============ TERMINAL TEXT COMPONENT ============
-const TerminalText = ({
-  text,
-  className = "",
-  typingSpeed = 40,
-  glitchChance = 0.08,
-  loop = true
-}) => {
-  const [displayedText, setDisplayedText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isGlitching, setIsGlitching] = useState(false);
-  const [showCursor, setShowCursor] = useState(true);
-
-  const glitchChars = '█▓░▒█#$%&@!?';
-
-  useEffect(() => {
-    const cursorInterval = setInterval(() => {
-      setShowCursor(prev => !prev);
-    }, 530);
-    return () => clearInterval(cursorInterval);
-  }, []);
-
-  useEffect(() => {
-    if (currentIndex >= text.length) {
-      if (loop) {
-        const pauseTimer = setTimeout(() => setCurrentIndex(0), 2500);
-        return () => clearTimeout(pauseTimer);
-      }
-      return;
-    }
-
-    const shouldGlitch = Math.random() < glitchChance;
-
-    if (shouldGlitch) {
-      setIsGlitching(true);
-      const glitchTimer = setTimeout(() => {
-        setDisplayedText(text.slice(0, currentIndex + 1));
-        setCurrentIndex(prev => prev + 1);
-        setIsGlitching(false);
-      }, 60 + Math.random() * 40);
-      return () => clearTimeout(glitchTimer);
-    } else {
-      const timer = setTimeout(() => {
-        setDisplayedText(text.slice(0, currentIndex + 1));
-        setCurrentIndex(prev => prev + 1);
-      }, typingSpeed + Math.random() * 20);
-      return () => clearTimeout(timer);
-    }
-  }, [currentIndex, text, typingSpeed, glitchChance, loop]);
-
-  return (
-    <span className={`terminal-text inline ${className}`}>
-      <span className={isGlitching ? 'glitch-char' : ''}>
-        {displayedText}
-      </span>
-      {currentIndex < text.length ? (
-        <span className="cursor" style={{ color: '#14b8a6', textShadow: '0 0 8px rgba(20,184,166,0.8)' }}>
-          █
-        </span>
-      ) : showCursor && (
-        <span className="cursor" style={{ color: '#14b8a6', textShadow: '0 0 8px rgba(20,184,166,0.8)' }}>
-          █
-        </span>
-      )}
-    </span>
-  );
-};
-
-// ============ TILT CARD COMPONENT ============
-const TiltCard = ({
-  children,
-  className = "",
-  tiltStrength = 10,
-  glareOpacity = 0.15,
-  glareColor = '20, 184, 166'
-}) => {
-  const cardRef = useRef(null);
-  const [transform, setTransform] = useState({ x: 0, y: 0 });
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseMove = useCallback((e) => {
-    if (!cardRef.current) return;
-
-    requestAnimationFrame(() => {
-      const rect = cardRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-
-      const rotateY = ((x - centerX) / centerX) * tiltStrength;
-      const rotateX = ((y - centerY) / centerY) * -tiltStrength;
-
-      setTransform({ x: rotateX, y: rotateY });
-      setMousePos({ x, y });
-    });
-  }, [tiltStrength]);
-
-  const handleMouseLeave = () => {
-    setTransform({ x: 0, y: 0 });
-    setIsHovered(false);
-  };
-
-  const handleMouseEnter = () => setIsHovered(true);
-
-  return (
-    <div
-      ref={cardRef}
-      className={`tilt-card-container relative ${className}`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onMouseEnter={handleMouseEnter}
-    >
-      <div
-        style={{
-          transform: `perspective(1000px) rotateX(${transform.x}deg) rotateY(${transform.y}deg) scale3d(${isHovered ? 1.02 : 1}, ${isHovered ? 1.02 : 1}, 1)`,
-          transformStyle: 'preserve-3d',
-          willChange: 'transform',
-          transition: isHovered ? 'none' : 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'
-        }}
-        className="tilt-card"
-      >
-        <div className="tilt-card-inner">{children}</div>
-      </div>
-      <div
-        style={{
-          background: `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, rgba(${glareColor},${glareOpacity}) 0%, transparent 50%)`,
-          opacity: isHovered ? 1 : 0,
-          transition: 'opacity 0.3s ease'
-        }}
-        className="tilt-card-glare"
-      ></div>
-    </div>
-  );
-};
-
-// --- DATA TRANSLATION ---
-const dict = {
-  id: {
-    nav: { home: 'Beranda', about: 'Tentang', projects: 'Proyek', contact: 'Kontak' },
-    hero: {
-      greeting: 'HALO, SAYA',
-      rolePrefix: 'Seorang',
-      desc: 'Saya membantu membangun aplikasi web yang aman, scalable, dan estetis. Menjembatani kesenjangan antara fungsionalitas tingkat tinggi dan keamanan siber (Cyber Security).',
-      btnProject: 'Lihat Proyek',
-      btnContact: 'Kontak Saya'
-    },
-    about: {
-      title: 'Tentang Saya',
-      subtitle: 'Perpaduan logika kode dan keamanan sistem.',
-      p1: 'Perjalanan saya di dunia teknologi dimulai dari ketertarikan pada bagaimana sistem bekerja dan bagaimana melindunginya. Sebagai Fullstack Developer sekaligus praktisi Cyber Security, saya tidak hanya membangun aplikasi yang indah, tapi juga tahan terhadap kerentanan.',
-      p2: 'Saat ini, saya terus mengembangkan keahlian di bidang penetration testing dan modern web development. Kombinasi ini adalah kekuatan utama saya dalam setiap proyek yang saya tangani.',
-      exp: 'TAHUN PENGALAMAN',
-      proj: 'PROYEK SELESAI',
-      client: 'KLIEN PUAS',
-      cv: 'Unduh CV'
-    },
-    projects: {
-      title: 'Proyek Terpilih',
-      subtitle: 'Beberapa karya yang menyoroti keahlian development & security saya.',
-      view: 'Lihat'
-    },
-    stack: {
-      title: 'Tech & Security Stack',
-      subtitle: 'Alat dan teknologi yang saya gunakan sehari-hari.'
-    },
-    contact: {
-      title: 'Mari Terhubung',
-      subtitle: 'Saya selalu terbuka untuk proyek baru atau sekadar obrolan. Kirimkan sinyal Anda.',
-      sysStatus: 'SYSTEM STATUS: ONLINE',
-      emailLabel: 'EMAIL SAYA',
-      waLabel: 'CHAT WHATSAPP',
-      uplink: 'ESTABLISHING SECURE UPLINK...',
-      formTitle: 'INITIATE DATA TRANSMISSION',
-      namePlaceholder: 'ID Pengirim / Nama',
-      emailPlaceholder: 'Frekuensi / Alamat Email',
-      msgPlaceholder: 'Data Transmisi Pesan...',
-      btnSubmit: 'INISIASI TRANSMISI'
-    }
-  },
-  en: {
-    nav: { home: 'Home', about: 'About', projects: 'Projects', contact: 'Contact' },
-    hero: {
-      greeting: 'HELLO, I AM',
-      rolePrefix: 'A',
-      desc: 'I help build secure, scalable, and aesthetic web applications. Bridging the gap between high-level functionality and cyber security.',
-      btnProject: 'View Projects',
-      btnContact: 'Contact Me'
-    },
-    about: {
-      title: 'About Me',
-      subtitle: 'The fusion of code logic and system security.',
-      p1: 'My journey in the tech world started with a fascination for how systems work and how to protect them. As a Fullstack Developer and Cyber Security practitioner, I don\'t just build beautiful apps, but resilient ones.',
-      p2: 'Currently, I am continuously honing my skills in penetration testing and modern web development. This combination is my core strength in every project I handle.',
-      exp: 'YEARS EXPERIENCE',
-      proj: 'PROJECTS DONE',
-      client: 'HAPPY CLIENTS',
-      cv: 'Download CV'
-    },
-    projects: {
-      title: 'Selected Projects',
-      subtitle: 'Some of my work highlighting my development & security skills.',
-      view: 'View'
-    },
-    stack: {
-      title: 'Tech & Security Stack',
-      subtitle: 'Tools and technologies I use daily.'
-    },
-    contact: {
-      title: 'Let\'s Connect',
-      subtitle: 'I am always open to new projects or just a chat. Send your signal.',
-      sysStatus: 'SYSTEM STATUS: ONLINE',
-      emailLabel: 'EMAIL ME',
-      waLabel: 'WHATSAPP CHAT',
-      uplink: 'ESTABLISHING SECURE UPLINK...',
-      formTitle: 'INITIATE DATA TRANSMISSION',
-      namePlaceholder: 'Sender ID / Name',
-      emailPlaceholder: 'Email Frequency / Address',
-      msgPlaceholder: 'Message Transmission Data...',
-      btnSubmit: 'INITIATE TRANSMISSION'
-    }
-  }
-};
-
-// --- 15 TECH STACK BESERTA DESKRIPSI DETAIL UNTUK POP-UP ---
-const techStack = [
-  { name: 'React', desc: 'FRONTEND LIB', details: 'Library andalan saya untuk membangun antarmuka pengguna yang interaktif, reaktif, dan komponen-based. Sangat optimal untuk merender data dinamis secara real-time.', icon: <Code2 size={24} className="text-blue-400" /> },
-  { name: 'Tailwind', desc: 'CSS FRAMEWORK', details: 'Mempercepat proses styling web dengan utility-classes. Membuat desain responsif menjadi super gampang, konsisten, dan memiliki ukuran file yang sangat ringan saat di-build.', icon: <Layout size={24} className="text-teal-400" /> },
-  { name: 'Node.js', desc: 'BACKEND RUNTIME', details: 'Environment runtime untuk mengeksekusi JavaScript di sisi server. Sangat cepat dan scalable untuk membuat REST API dan menangani jutaan request.', icon: <Terminal size={24} className="text-green-500" /> },
-  { name: 'Next.js', desc: 'WEB FRAMEWORK', details: 'Framework React pilihan utama saya untuk level produksi. Saya gunakan untuk Server-Side Rendering (SSR), optimasi SEO-friendly web, dan performa yang maksimal.', icon: <Globe size={24} className="text-white" /> },
-  { name: 'PHP', desc: 'BACKEND SCRIPTING', details: 'Bahasa backend klasik yang sangat solid. Sering saya gunakan untuk membangun sistem logika web custom atau me-maintenance arsitektur server legacy (lama).', icon: <Code2 size={24} className="text-indigo-400" /> },
-  { name: 'Laravel', desc: 'PHP FRAMEWORK', details: 'Framework PHP paling elegan. Saya andalkan untuk membuat aplikasi web kompleks dengan fitur keamanan yang ketat dan arsitektur MVC yang sangat rapi.', icon: <Box size={24} className="text-red-500" /> },
-  { name: 'CodeIgniter 4', desc: 'PHP FRAMEWORK', details: 'Ringan, super cepat, dan sangat mudah di-deploy. Solusi paling akurat untuk proyek PHP yang memiliki resource server terbatas atau sekadar API sederhana.', icon: <Flame size={24} className="text-orange-500" /> },
-  { name: 'Kali Linux', desc: 'PEN TESTING OS', details: 'Sistem operasi wajib untuk menguji kerentanan server dan aplikasi. Dilengkapi ratusan tools keamanan siber untuk keperluan penetration testing dan ethical hacking.', icon: <ShieldCheck size={24} className="text-indigo-400" /> },
-  { name: 'Python', desc: 'SCRIPTING', details: 'Bahasa serba bisa dan fleksibel. Sering saya pakai untuk automasi tugas sehari-hari, membuat script eksploitasi keamanan custom, hingga manipulasi big data.', icon: <Code2 size={24} className="text-yellow-400" /> },
-  { name: 'PostgreSQL', desc: 'DATABASE', details: 'Database relasional terkuat pilihan saya. Sangat tangguh, dijamin aman, dan mampu menangani eksekusi query kompleks dengan volume data berskala besar tanpa lag.', icon: <Database size={24} className="text-blue-300" /> },
-  { name: 'Burp Suite', desc: 'SECURITY TOOL', details: 'Senjata rahasia utama untuk web vulnerability scanning dan memanipulasi alur traffic HTTP/HTTPS dalam aktivitas mencari celah keamanan web (pentest).', icon: <ShieldCheck size={24} className="text-orange-500" /> },
-  { name: 'Figma', desc: 'UI/UX DESIGN', details: 'Tool kolaboratif super canggih untuk merancang wireframe, mockup estetis, dan prototype web interaktif sebelum masuk ke tahap eksekusi coding.', icon: <FigmaIcon size={24} className="text-pink-400" /> },
-  { name: 'Canva', desc: 'LAYOUT DESIGN', details: 'Penyelamat handal untuk merancang aset grafis dengan cepat, membuat presentasi proyek, atau menghasilkan ilustrasi sederhana pendukung visual website.', icon: <Paintbrush size={24} className="text-cyan-400" /> },
-  { name: 'Premiere Pro', desc: 'VIDEO EDITING', details: 'Software andalan kelas dunia untuk mengedit video portofolio, memotong klip presentasi project, atau membuat dokumentasi profesional dengan standar industri.', icon: <Video size={24} className="text-purple-500" /> },
-  { name: 'Capcut', desc: 'VIDEO EDITING', details: 'Sangat praktis untuk proses editing video kilat, terutama untuk memenuhi kebutuhan konten sosial media yang serba dinamis dengan efek transisi kekinian.', icon: <Scissors size={24} className="text-gray-100" /> },
-];
+import { GithubIcon, LinkedinIcon, InstagramIcon, FigmaIcon } from './components/icons';
+import { AnimatedCounter } from './components/ui/AnimatedCounter';
+import { TypingText } from './components/ui/TypingText';
+import { TerminalText } from './components/ui/TerminalText';
+import { TiltCard } from './components/ui/TiltCard';
+import { dict, techStack } from './data/constants';
 
 export default function App() {
   const [lang, setLang] = useState('id');
@@ -543,7 +220,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden">
+    <main className="bg-[#09090b] min-h-screen text-zinc-300 font-mono relative overflow-hidden selection:bg-teal-500/30 selection:text-teal-200">
 
       {/* CSS INJECTIONS */}
       <style dangerouslySetInnerHTML={{
@@ -676,7 +353,7 @@ export default function App() {
       `}} />
 
       {/* AUDIO KICAU MANIA */}
-      <audio ref={audioRef} loop>
+      <audio ref={audioRef} loop preload="none">
         <source src="musik.mp3" type="audio/mpeg" />
       </audio>
 
@@ -695,11 +372,12 @@ export default function App() {
             </p>
 
             <div className="relative w-[280px] h-[360px] md:w-[320px] md:h-[400px] rounded-t-full rounded-b-3xl overflow-hidden shadow-[0_0_80px_rgba(20,184,166,0.15)] border border-white/10 group mb-6 bg-zinc-900">
-              <img src="/profil.jpg" alt="Danial Gibran" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90" />
+              <img src="/profil.webp" fetchpriority="high" alt="Danial Gibran" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90" />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#09090b]"></div>
 
               <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]">
                 <button
+                  aria-label="Enter Site"
                   onClick={handleEnterSite}
                   className="w-24 h-24 bg-teal-500/90 text-white rounded-full flex items-center justify-center hover:scale-110 hover:bg-teal-400 transition-all duration-300 shadow-[0_0_40px_rgba(20,184,166,0.6)] cursor-pointer border-4 border-black/20"
                 >
@@ -719,6 +397,7 @@ export default function App() {
 
       {/* FLOATING MUSIC BUTTON */}
       <button
+        aria-label="Toggle Music"
         onClick={toggleMusic}
         className="fixed bottom-6 right-6 z-50 p-4 rounded-full glass-card border border-teal-500/30 text-teal-400 hover:bg-teal-500/20 hover:scale-110 transition-all duration-300 shadow-[0_0_20px_rgba(20,184,166,0.2)] group"
       >
@@ -802,9 +481,9 @@ export default function App() {
             </div>
 
             <div className="flex items-center space-x-5 pt-8 text-zinc-500 animate-fade-up" style={{ animationDelay: '1600ms' }}>
-              <a href="https://github.com/danialg1" target="_blank" rel="noreferrer" className="hover:text-white transition-colors"><GithubIcon size={22} /></a>
-              <a href="https://www.linkedin.com/in/danial-gibran-342370288" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors"><LinkedinIcon size={22} /></a>
-              <a href="https://www.instagram.com/danial_g1bran" target="_blank" rel="noreferrer" className="hover:text-pink-500 transition-colors"><InstagramIcon size={22} /></a>
+              <a href="https://github.com/danialg1" aria-label="GitHub" target="_blank" rel="noreferrer" className="hover:text-white transition-colors"><GithubIcon size={22} /></a>
+              <a href="https://www.linkedin.com/in/danial-gibran-342370288" aria-label="LinkedIn" target="_blank" rel="noreferrer" className="hover:text-blue-500 transition-colors"><LinkedinIcon size={22} /></a>
+              <a href="https://www.instagram.com/danial_g1bran" aria-label="Instagram" target="_blank" rel="noreferrer" className="hover:text-pink-500 transition-colors"><InstagramIcon size={22} /></a>
             </div>
           </div>
 
@@ -814,7 +493,7 @@ export default function App() {
               className="shine-container relative w-full max-w-[400px] aspect-[3/4] rounded-[2.5rem] shadow-[0_0_50px_rgba(20,184,166,0.15)] group transition-transform duration-100 ease-out"
             >
               <img
-                src="/profil.jpg"
+                src="/profil.webp"
                 alt="Danial Gibran"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -823,7 +502,7 @@ export default function App() {
               <div className="absolute bottom-6 left-6 right-6 glass-card rounded-2xl p-4 flex items-center justify-between border border-white/10 shadow-2xl">
                 <div className="flex items-center space-x-3">
                   <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-zinc-800">
-                    <img src="/profil.jpg" alt="Avatar" className="w-full h-full object-cover" />
+                    <img src="/profil.webp" loading="lazy" decoding="async" alt="Avatar" className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <p className="text-sm font-bold text-white tracking-wide">@danialgibran</p>
@@ -1158,12 +837,12 @@ export default function App() {
           </div>
 
           <div className="flex space-x-6">
-            <a href="https://github.com/danialg1" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors"><GithubIcon size={18} /></a>
-            <a href="https://www.linkedin.com/in/danial-gibran-342370288" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-blue-500 transition-colors"><LinkedinIcon size={18} /></a>
-            <a href="mailto:danialgibran0@gmail.com" className="text-zinc-500 hover:text-teal-400 transition-colors"><Mail size={18} /></a>
+            <a href="https://github.com/danialg1" aria-label="GitHub" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors"><GithubIcon size={18} /></a>
+            <a href="https://www.linkedin.com/in/danial-gibran-342370288" aria-label="LinkedIn" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-blue-500 transition-colors"><LinkedinIcon size={18} /></a>
+            <a href="mailto:danialgibran0@gmail.com" aria-label="Email" className="text-zinc-500 hover:text-teal-400 transition-colors"><Mail size={18} /></a>
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }
