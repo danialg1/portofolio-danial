@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { db } from './firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { 
-  Mail, 
-  ChevronRight, 
-  Download, 
-  Code2, 
-  ShieldCheck, 
-  Database, 
-  Terminal, 
-  Layout, 
+import {
+  Mail,
+  ChevronRight,
+  Download,
+  Code2,
+  ShieldCheck,
+  Database,
+  Terminal,
+  Layout,
   Globe,
   Send,
   User,
@@ -65,8 +65,8 @@ const AnimatedCounter = ({ target, suffix }) => {
     if (!isVisible) return;
     let start = 0;
     const duration = 2000; // 2 detik hitung
-    const increment = target / (duration / 16); 
-    
+    const increment = target / (duration / 16);
+
     const timer = setInterval(() => {
       start += increment;
       if (start >= target) {
@@ -104,7 +104,7 @@ const TypingText = ({ text }) => {
         <span
           key={i}
           className={`inline-block mr-1.5 transition-all duration-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          style={{ transitionDelay: `${i * 30}ms` }} 
+          style={{ transitionDelay: `${i * 30}ms` }}
         >
           {word}
         </span>
@@ -371,7 +371,7 @@ export default function App() {
   const audioRef = useRef(null);
   const heroCardRef = useRef(null);
   const aboutLanyardRef = useRef(null);
-  
+
   const [dragPos, setDragPos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const dragStartPos = useRef({ x: 0, y: 0 });
@@ -392,7 +392,7 @@ export default function App() {
       document.body.style.overflow = 'unset';
     }
   }, [showSplash]);
-  
+
   // OBSERVER UNTUK ANIMASI SCROLL
   useEffect(() => {
     if (showSplash) return;
@@ -432,7 +432,7 @@ export default function App() {
     };
 
     fetchProjects();
-  }, []); 
+  }, []);
 
   // MOUSE PARALLAX EFFECT HERO
   useEffect(() => {
@@ -441,14 +441,14 @@ export default function App() {
     let animationFrameId;
     const handleMouseMove = (e) => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      
+
       animationFrameId = requestAnimationFrame(() => {
         const { clientX, clientY } = e;
         const { innerWidth, innerHeight } = window;
-        
-        const xPos = (clientX / innerWidth - 0.5) * 12; 
+
+        const xPos = (clientX / innerWidth - 0.5) * 12;
         const yPos = (clientY / innerHeight - 0.5) * -12;
-        
+
         if (heroCardRef.current) {
           heroCardRef.current.style.transform = `perspective(1000px) rotateY(${xPos}deg) rotateX(${yPos}deg)`;
         }
@@ -471,9 +471,9 @@ export default function App() {
     setIsDragging(true);
     const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
     const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-    dragStartPos.current = { 
-      x: clientX - dragPos.x, 
-      y: clientY - dragPos.y 
+    dragStartPos.current = {
+      x: clientX - dragPos.x,
+      y: clientY - dragPos.y
     };
   };
 
@@ -482,24 +482,24 @@ export default function App() {
     const handleDragMove = (e) => {
       if (!isDragging) return;
       if (moveFrame) cancelAnimationFrame(moveFrame);
-      
+
       moveFrame = requestAnimationFrame(() => {
         const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
         const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-        
+
         let newX = clientX - dragStartPos.current.x;
         let newY = clientY - dragStartPos.current.y;
-        
+
         newX = Math.max(-150, Math.min(150, newX));
-        newY = Math.max(-20, Math.min(200, newY)); 
-        
+        newY = Math.max(-20, Math.min(200, newY));
+
         setDragPos({ x: newX, y: newY });
       });
     };
 
     const handleDragEnd = () => {
       setIsDragging(false);
-      setDragPos({ x: 0, y: 0 }); 
+      setDragPos({ x: 0, y: 0 });
     };
 
     if (isDragging) {
@@ -544,9 +544,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden">
-      
+
       {/* CSS INJECTIONS */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         html { scroll-behavior: smooth; }
         
         .glass-card, .lanyard-swing, .scroll-drop, .animate-on-scroll {
@@ -696,15 +697,15 @@ export default function App() {
             <div className="relative w-[280px] h-[360px] md:w-[320px] md:h-[400px] rounded-t-full rounded-b-3xl overflow-hidden shadow-[0_0_80px_rgba(20,184,166,0.15)] border border-white/10 group mb-6 bg-zinc-900">
               <img src="/profil.jpg" alt="Danial Gibran" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90" />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#09090b]"></div>
-              
+
               <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]">
-                 <button 
-                   onClick={handleEnterSite}
-                   className="w-24 h-24 bg-teal-500/90 text-white rounded-full flex items-center justify-center hover:scale-110 hover:bg-teal-400 transition-all duration-300 shadow-[0_0_40px_rgba(20,184,166,0.6)] cursor-pointer border-4 border-black/20"
-                 >
-                   <Play size={44} className="ml-2" fill="currentColor" />
-                 </button>
-                 <p className="text-white/70 text-xs font-bold tracking-widest mt-4 uppercase animate-pulse">Click to Enter</p>
+                <button
+                  onClick={handleEnterSite}
+                  className="w-24 h-24 bg-teal-500/90 text-white rounded-full flex items-center justify-center hover:scale-110 hover:bg-teal-400 transition-all duration-300 shadow-[0_0_40px_rgba(20,184,166,0.6)] cursor-pointer border-4 border-black/20"
+                >
+                  <Play size={44} className="ml-2" fill="currentColor" />
+                </button>
+                <p className="text-white/70 text-xs font-bold tracking-widest mt-4 uppercase animate-pulse">Click to Enter</p>
               </div>
             </div>
 
@@ -717,7 +718,7 @@ export default function App() {
 
 
       {/* FLOATING MUSIC BUTTON */}
-      <button 
+      <button
         onClick={toggleMusic}
         className="fixed bottom-6 right-6 z-50 p-4 rounded-full glass-card border border-teal-500/30 text-teal-400 hover:bg-teal-500/20 hover:scale-110 transition-all duration-300 shadow-[0_0_20px_rgba(20,184,166,0.2)] group"
       >
@@ -741,17 +742,17 @@ export default function App() {
           <div className="text-2xl font-bold text-white tracking-tighter">
             Danial<span className="text-teal-400">.</span>
           </div>
-          
+
           <div className="hidden md:flex items-center space-x-8 text-sm font-medium">
             <a href="#home" className="hover:text-teal-400 transition-colors">{t.nav.home}</a>
             <a href="#about" className="hover:text-teal-400 transition-colors">{t.nav.about}</a>
             <a href="#stack" className="hover:text-teal-400 transition-colors">Tools</a>
             <a href="#projects" className="hover:text-teal-400 transition-colors">{t.nav.projects}</a>
             <a href="#contact" className="hover:text-teal-400 transition-colors">{t.nav.contact}</a>
-            
+
             <div className="h-4 w-px bg-zinc-700"></div>
-            
-            <button 
+
+            <button
               onClick={() => setLang(lang === 'id' ? 'en' : 'id')}
               className="flex items-center space-x-2 text-zinc-400 hover:text-white transition-colors bg-zinc-800/50 px-3 py-1.5 rounded-full border border-zinc-700/50 cursor-pointer"
             >
@@ -765,12 +766,12 @@ export default function App() {
       {/* HERO SECTION */}
       <section id="home" className="relative pt-32 pb-20 px-6 min-h-screen flex items-center">
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          
+
           <div className="z-10 space-y-6">
             <p className="text-teal-400 font-semibold tracking-wider text-sm uppercase animate-fade-up" style={{ animationDelay: '100ms' }}>
               {t.hero.greeting}
             </p>
-            
+
             <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight flex flex-wrap gap-x-4">
               {("Danial Gibran").split(' ').map((word, i) => (
                 <span key={i} className="animate-fade-up inline-block" style={{ animationDelay: `${200 + i * 200}ms` }}>
@@ -778,18 +779,18 @@ export default function App() {
                 </span>
               ))}
             </h1>
-            
+
             <h2 className="text-2xl md:text-3xl font-medium text-zinc-400 animate-fade-up" style={{ animationDelay: '600ms' }}>
               {t.hero.rolePrefix} <span className="text-white border-b-2 border-teal-500 pb-1">Fullstack Dev & Cyber Security</span>
             </h2>
-            
+
             <TerminalText
               text={t.hero.desc}
               className="text-zinc-400 leading-relaxed max-w-lg text-lg"
               typingSpeed={35}
               glitchChance={0.1}
             />
-            
+
             <div className="flex items-center space-x-4 pt-4 animate-fade-up" style={{ animationDelay: '1500ms' }}>
               <a href="#projects" className="group flex items-center space-x-2 bg-teal-500/10 text-teal-400 border border-teal-500/50 px-6 py-3 rounded-full font-medium hover:bg-teal-500/20 transition-all">
                 <span>{t.hero.btnProject}</span>
@@ -808,17 +809,17 @@ export default function App() {
           </div>
 
           <div className="hidden md:flex justify-center items-center h-full relative p-4 animate-spring">
-            <div 
+            <div
               ref={heroCardRef}
               className="shine-container relative w-full max-w-[400px] aspect-[3/4] rounded-[2.5rem] shadow-[0_0_50px_rgba(20,184,166,0.15)] group transition-transform duration-100 ease-out"
             >
-              <img 
-                src="/profil.jpg" 
-                alt="Danial Gibran" 
+              <img
+                src="/profil.jpg"
+                alt="Danial Gibran"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-transparent to-transparent opacity-90"></div>
-              
+
               <div className="absolute bottom-6 left-6 right-6 glass-card rounded-2xl p-4 flex items-center justify-between border border-white/10 shadow-2xl">
                 <div className="flex items-center space-x-3">
                   <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-zinc-800">
@@ -832,7 +833,7 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-                
+
                 <a href="#contact" className="text-xs font-semibold bg-zinc-800 border border-zinc-700 hover:bg-teal-500 hover:text-zinc-900 hover:border-teal-400 text-white px-4 py-2.5 rounded-xl transition-all duration-300 relative z-20">
                   Contact Me
                 </a>
@@ -847,31 +848,31 @@ export default function App() {
       <section id="about" className="py-20 px-6 relative overflow-hidden">
         <div className="max-w-5xl mx-auto glass-card rounded-3xl p-8 md:p-12 relative">
           <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 rounded-full blur-[80px]"></div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10 items-center">
-            
+
             <div className="hidden md:flex md:col-span-4 justify-center items-start h-full perspective-[1000px] mt-[-40px] select-none scroll-drop">
-              <div 
-                className="lanyard-swing flex flex-col items-center" 
+              <div
+                className="lanyard-swing flex flex-col items-center"
                 style={{ animationDelay: '-1.5s', animationPlayState: isDragging ? 'paused' : 'running' }}
               >
-                <div 
+                <div
                   className={`w-1 bg-gradient-to-b from-zinc-800 to-zinc-500 shadow-xl rounded-full origin-top ${isDragging ? '' : 'transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]'}`}
                   style={{
                     height: `${stringBaseHeight}px`,
                     transform: `rotate(${-stringAngleDeg}deg) scaleY(${stringLength / stringBaseHeight})`
                   }}
                 ></div>
-                
-                <div 
+
+                <div
                   onMouseDown={handleDragStart}
                   onTouchStart={handleDragStart}
                   className={`flex flex-col items-center cursor-grab active:cursor-grabbing ${isDragging ? '' : 'transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]'}`}
                   style={{ transform: `translate(${dragPos.x}px, ${dragPos.y}px)` }}
                 >
                   <div className="w-4 h-6 bg-zinc-400 rounded-sm -mt-2 z-10 shadow-lg border border-zinc-300 pointer-events-none"></div>
-                  
-                  <div 
+
+                  <div
                     ref={aboutLanyardRef}
                     className={`glass-card w-56 rounded-2xl p-4 shadow-2xl flex flex-col mt-2 relative overflow-hidden group pointer-events-none ${isDragging ? '' : 'transition-transform duration-100 ease-out'}`}
                   >
@@ -879,7 +880,7 @@ export default function App() {
                     <div className="w-full h-36 bg-zinc-800 rounded-xl overflow-hidden relative border border-zinc-700/50">
                       <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=400" alt="Matrix Security" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" />
                       <div className="absolute inset-0 flex items-center justify-center">
-                         <ShieldCheck size={56} className="text-teal-400 drop-shadow-[0_0_15px_rgba(20,184,166,0.6)]" />
+                        <ShieldCheck size={56} className="text-teal-400 drop-shadow-[0_0_15px_rgba(20,184,166,0.6)]" />
                       </div>
                     </div>
                     <div className="mt-4 text-center pb-2">
@@ -902,11 +903,11 @@ export default function App() {
                 <p className="text-zinc-500 italic mb-6 border-l-2 border-zinc-700 pl-4">
                   {t.about.subtitle}
                 </p>
-                
+
                 {/* Animasi Text Typing yang Baru */}
                 <div className="space-y-4">
-                   <TypingText text={t.about.p1} />
-                   <TypingText text={t.about.p2} />
+                  <TypingText text={t.about.p1} />
+                  <TypingText text={t.about.p2} />
                 </div>
               </div>
 
@@ -931,7 +932,7 @@ export default function App() {
                   <p className="text-[10px] font-semibold text-zinc-500 tracking-wider uppercase">{t.about.client}</p>
                 </div>
               </div>
-              
+
               <div className="pt-2 animate-on-scroll" style={{ transitionDelay: '200ms' }}>
                 <button className="flex items-center space-x-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white px-6 py-3 rounded-full transition-all text-sm font-medium">
                   <span>{t.about.cv}</span>
@@ -956,8 +957,8 @@ export default function App() {
 
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-4">
           {techStack.map((tech, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               onMouseEnter={() => setHoveredTech(tech)}
               onMouseLeave={() => setHoveredTech(null)}
               onClick={(e) => { e.stopPropagation(); setHoveredTech(tech); }}
@@ -980,26 +981,26 @@ export default function App() {
       </section>
 
       {/* CENTRAL POPUP UNTUK TECH STACK (MEMBESAR KE TENGAH LAYAR) */}
-      <div 
-         className={`fixed inset-0 z-[150] pointer-events-none flex items-center justify-center transition-opacity duration-500 ${hoveredTech ? 'opacity-100' : 'opacity-0'}`}
+      <div
+        className={`fixed inset-0 z-[150] pointer-events-none flex items-center justify-center transition-opacity duration-500 ${hoveredTech ? 'opacity-100' : 'opacity-0'}`}
       >
         {/* Latar Belakang Gelap / Ngeblur (Gak menghalangi kursor hover) */}
         <div className="absolute inset-0 bg-[#09090b]/40 backdrop-blur-[2px] transition-opacity duration-500"></div>
-        
+
         {/* Kotak Hologram Besar di Tengah (Pop-up) */}
         <div className={`relative z-10 glass-card p-8 md:p-12 max-w-md w-[90%] rounded-[2rem] flex flex-col items-center text-center shadow-[0_0_100px_rgba(20,184,166,0.3)] transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${hoveredTech ? 'scale-100 translate-y-0 opacity-100' : 'scale-50 translate-y-10 opacity-0'}`}>
           {hoveredTech && (
             <>
-               <div className="absolute top-10 w-40 h-40 bg-teal-500/20 rounded-full blur-[50px] -z-10"></div>
-               <div className="p-5 bg-zinc-800/80 rounded-2xl mb-6 shadow-2xl border border-zinc-700/50 text-teal-400">
-                 {/* Besarin ukuran Icon aslinya */}
-                 {React.cloneElement(hoveredTech.icon, { size: 48, className: "text-white" })}
-               </div>
-               <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">{hoveredTech.name}</h3>
-               <p className="text-xs text-teal-400 tracking-widest font-mono mb-6 uppercase bg-teal-500/10 border border-teal-500/30 px-4 py-1.5 rounded-full">{hoveredTech.desc}</p>
-               <p className="text-zinc-300 leading-relaxed text-sm md:text-base border-t border-zinc-800 pt-6">
-                 {hoveredTech.details}
-               </p>
+              <div className="absolute top-10 w-40 h-40 bg-teal-500/20 rounded-full blur-[50px] -z-10"></div>
+              <div className="p-5 bg-zinc-800/80 rounded-2xl mb-6 shadow-2xl border border-zinc-700/50 text-teal-400">
+                {/* Besarin ukuran Icon aslinya */}
+                {React.cloneElement(hoveredTech.icon, { size: 48, className: "text-white" })}
+              </div>
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">{hoveredTech.name}</h3>
+              <p className="text-xs text-teal-400 tracking-widest font-mono mb-6 uppercase bg-teal-500/10 border border-teal-500/30 px-4 py-1.5 rounded-full">{hoveredTech.desc}</p>
+              <p className="text-zinc-300 leading-relaxed text-sm md:text-base border-t border-zinc-800 pt-6">
+                {hoveredTech.details}
+              </p>
             </>
           )}
         </div>
@@ -1062,9 +1063,9 @@ export default function App() {
 
           <div className="glass-card rounded-3xl p-1 relative overflow-hidden group hover:shadow-[0_0_40px_rgba(20,184,166,0.1)] transition-shadow duration-500 animate-on-scroll" style={{ transitionDelay: '100ms' }}>
             <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 via-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl"></div>
-            
+
             <div className="bg-[#0f0f12]/90 backdrop-blur-2xl rounded-[23px] p-8 md:p-12 relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12">
-              
+
               <div className="flex flex-col justify-between">
                 <div>
                   <div className="flex items-center space-x-3 text-red-400 mb-8 font-mono text-sm">
@@ -1110,17 +1111,17 @@ export default function App() {
                 <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
                   <div className="relative">
                     <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder={t.contact.namePlaceholder}
                       className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-teal-500/50 focus:ring-1 focus:ring-teal-500/50 transition-all"
                     />
                   </div>
-                  
+
                   <div className="relative">
                     <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       placeholder={t.contact.emailPlaceholder}
                       className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-teal-500/50 focus:ring-1 focus:ring-teal-500/50 transition-all"
                     />
@@ -1128,7 +1129,7 @@ export default function App() {
 
                   <div className="relative">
                     <MessageSquare size={18} className="absolute left-4 top-4 text-zinc-500" />
-                    <textarea 
+                    <textarea
                       rows="4"
                       placeholder={t.contact.msgPlaceholder}
                       className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-teal-500/50 focus:ring-1 focus:ring-teal-500/50 transition-all resize-none"
@@ -1155,7 +1156,7 @@ export default function App() {
             </div>
             <p className="text-xs text-zinc-600 mt-1">© {new Date().getFullYear()} Danial Gibran. Secure Transmission Protocol.</p>
           </div>
-          
+
           <div className="flex space-x-6">
             <a href="https://github.com/danialg1" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors"><GithubIcon size={18} /></a>
             <a href="https://www.linkedin.com/in/danial-gibran-342370288" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-blue-500 transition-colors"><LinkedinIcon size={18} /></a>
