@@ -45,7 +45,7 @@ function App() {
     <main className="bg-background-light dark:bg-background-dark min-h-screen text-zinc-900 dark:text-zinc-300 font-sans relative overflow-x-hidden selection:bg-orange-500/30 selection:text-orange-500 transition-colors duration-500 ease-in-out">
       
       {/* Background Audio */}
-      <audio ref={audioRef} loop>
+      <audio ref={audioRef} loop preload="none">
         <source src="/musik.mp3?v=4" type="audio/mpeg" />
       </audio>
 

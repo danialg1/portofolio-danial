@@ -21,7 +21,7 @@ const About = ({ t }) => {
           <div className="relative flex justify-center items-center order-2 lg:order-1">
             <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 to-transparent rounded-full blur-3xl"></div>
             <img 
-              src="/illustration.png" 
+              src="/illustration.webp" 
               alt="Cyber Security Illustration" 
               loading="lazy"
               className="relative z-10 w-full max-w-md object-contain hover:-translate-y-4 transition-transform duration-700 drop-shadow-2xl"
