@@ -41,13 +41,13 @@ const Stack = ({ t, lang }) => {
                     {tech.name}
                   </h3>
                   <p className="text-xs font-bold text-orange-500 tracking-widest uppercase">
-                    {lang === 'id' ? tech.desc_id : tech.desc_en}
+                    {tech["desc_" + lang] || tech.desc_en}
                   </p>
                 </div>
               </div>
               
               <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed relative z-10 group-hover:text-zinc-800 dark:group-hover:text-zinc-200 transition-colors duration-500">
-                {lang === 'id' ? tech.details_id : tech.details_en}
+                {tech["details_" + lang] || tech.details_en}
               </p>
             </div>
           ))}

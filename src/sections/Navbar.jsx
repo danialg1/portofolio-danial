@@ -4,6 +4,19 @@ import { Sun, Moon, Languages, Menu, X } from 'lucide-react';
 const Navbar = ({ t, lang, setLang, theme, setTheme }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+
+  const availableLangs = [
+    { code: 'id', name: 'Indonesia', flag: '🇮🇩' },
+    { code: 'en', name: 'English', flag: '🇬🇧' },
+    { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+    { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+    { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+    { code: 'zh', name: '中文', flag: '🇨🇳' },
+    { code: 'ms', name: 'Melayu', flag: '🇲🇾' },
+    { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' }
+  ];
 
   // Efek transparan/blur saat di-scroll
   useEffect(() => {
@@ -61,14 +74,33 @@ const Navbar = ({ t, lang, setLang, theme, setTheme }) => {
             ))}
             
             <div className="flex items-center space-x-4 border-l border-zinc-200 dark:border-zinc-800 pl-6">
-              <button 
-                onClick={toggleLang} 
-                aria-label="Toggle Language"
-                className="flex items-center space-x-1.5 text-xs font-bold text-zinc-600 hover:text-orange-500 dark:text-zinc-300 transition-all bg-zinc-100 dark:bg-zinc-900 px-3 py-1.5 rounded-full hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95 border border-transparent hover:border-orange-500/30"
-              >
-                <Languages size={16} />
-                <span className="uppercase">{lang}</span>
-              </button>
+              <div className="relative">
+                <button 
+                  onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                  onBlur={() => setTimeout(() => setLangDropdownOpen(false), 200)}
+                  aria-label="Toggle Language"
+                  className="flex items-center space-x-1.5 text-xs font-bold text-zinc-600 hover:text-orange-500 dark:text-zinc-300 transition-all bg-zinc-100 dark:bg-zinc-900 px-3 py-1.5 rounded-full hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95 border border-transparent hover:border-orange-500/30"
+                >
+                  <Languages size={16} />
+                  <span className="uppercase">{lang}</span>
+                </button>
+                
+                {/* Language Dropdown Desktop */}
+                <div className={`absolute top-full right-0 mt-2 w-40 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 origin-top-right ${langDropdownOpen ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible'}`}>
+                  <div className="py-2 max-h-60 overflow-y-auto custom-scrollbar">
+                    {availableLangs.map((l) => (
+                      <button
+                        key={l.code}
+                        onClick={() => { setLang(l.code); setLangDropdownOpen(false); }}
+                        className={`w-full text-left px-4 py-2 text-sm flex items-center space-x-3 transition-colors ${lang === l.code ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-500 font-bold' : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'}`}
+                      >
+                        <span className="text-lg">{l.flag}</span>
+                        <span>{l.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
               <button 
                 onClick={toggleTheme} 
                 aria-label="Toggle Theme"
@@ -114,14 +146,32 @@ const Navbar = ({ t, lang, setLang, theme, setTheme }) => {
             style={{ transitionDelay: `${isOpen ? 100 + (navLinks.length * 75) : 0}ms` }}
             className={`flex items-center justify-center space-x-8 w-full pt-10 mt-6 border-t border-zinc-200/50 dark:border-zinc-800/50 transition-all duration-500 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
           >
-            <button 
-              onClick={toggleLang} 
-              aria-label="Toggle Language"
-              className="flex items-center justify-center space-x-2 text-lg font-bold text-zinc-600 hover:text-orange-500 dark:text-zinc-300 transition-colors bg-zinc-100/80 dark:bg-zinc-900/80 px-6 py-3 rounded-full hover:scale-105 active:scale-95 shadow-sm"
-            >
-              <Languages size={24} />
-              <span className="uppercase">{lang}</span>
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                aria-label="Toggle Language"
+                className="flex items-center justify-center space-x-2 text-lg font-bold text-zinc-600 hover:text-orange-500 dark:text-zinc-300 transition-colors bg-zinc-100/80 dark:bg-zinc-900/80 px-6 py-3 rounded-full hover:scale-105 active:scale-95 shadow-sm"
+              >
+                <Languages size={24} />
+                <span className="uppercase">{lang}</span>
+              </button>
+
+              {/* Language Dropdown Mobile */}
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-48 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 origin-bottom ${langDropdownOpen ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible'}`}>
+                  <div className="py-2 max-h-48 overflow-y-auto">
+                    {availableLangs.map((l) => (
+                      <button
+                        key={l.code}
+                        onClick={() => { setLang(l.code); setLangDropdownOpen(false); setIsOpen(false); }}
+                        className={`w-full text-left px-5 py-3 text-sm flex items-center space-x-3 transition-colors ${lang === l.code ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-500 font-bold' : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800'}`}
+                      >
+                        <span className="text-xl">{l.flag}</span>
+                        <span className="font-medium">{l.name}</span>
+                      </button>
+                    ))}
+                  </div>
+              </div>
+            </div>
             <button 
               onClick={toggleTheme} 
               aria-label="Toggle Theme"

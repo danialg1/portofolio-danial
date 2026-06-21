@@ -8,8 +8,10 @@ import Education from './sections/Education';
 import Projects from './sections/Projects';
 import Stack from './sections/Stack';
 import YoutubeSection from './sections/YoutubeSection';
+import WorldCup from './sections/WorldCup';
 import Contact from './sections/Contact';
 import Footer from './sections/Footer';
+import { WorldCupTheme } from './components/ui/WorldCupTheme';
 
 function App() {
   // State for Language: default 'id'
@@ -45,10 +47,12 @@ function App() {
   return (
     <main className="bg-background-light dark:bg-background-dark min-h-screen text-zinc-900 dark:text-zinc-300 font-sans relative overflow-x-hidden selection:bg-orange-500/30 selection:text-orange-500 transition-colors duration-500 ease-in-out">
       
-      {/* Background Audio */}
       <audio ref={audioRef} loop preload="none">
         <source src="/musik.mp3?v=4" type="audio/mpeg" />
       </audio>
+
+      {/* World Cup 2026 Theme Injection */}
+      <WorldCupTheme />
 
       <Navbar t={t} lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />
       
@@ -58,6 +62,10 @@ function App() {
       <Projects t={t} />
       <Stack t={t} lang={lang} />
       <YoutubeSection t={t} />
+      
+      {/* World Cup 2026 Dashboard Integration */}
+      <WorldCup lang={lang} />
+
       <Contact t={t} />
       <Footer />
       

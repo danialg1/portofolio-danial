@@ -3,16 +3,15 @@ import { Download, CheckCircle2, FolderCheck, Smile } from 'lucide-react';
 import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 
 const About = ({ t }) => {
-  const isEn = t.about.title === 'About Me';
   const statsData = [
-    { target: 6, suffix: ' Tahun', label: isEn ? 'Video Editing' : 'Video Editing', img: '/video.jpg' },
-    { target: 3, suffix: ' Tahun', label: isEn ? 'Web Programming' : 'Web Programming', img: '/web.jpg' },
-    { target: 1, suffix: ' Tahun', label: isEn ? 'Cyber Security' : 'Cyber Security', img: '/cyber.jpeg' }
+    { target: 6, suffix: t.about.year, label: 'Video Editing', img: '/video.jpg' },
+    { target: 3, suffix: t.about.year, label: 'Web Programming', img: '/web.jpg' },
+    { target: 1, suffix: t.about.year, label: 'Cyber Security', img: '/cyber.jpeg' }
   ];
 
   const miniStats = [
-    { target: 5, suffix: '+', label: isEn ? 'Completed Projects' : 'Proyek Selesai', icon: FolderCheck },
-    { target: 90, suffix: '%', label: isEn ? 'Satisfied Clients' : 'Klien Puas', icon: Smile }
+    { target: 5, suffix: '+', label: t.about.completedProjects, icon: FolderCheck },
+    { target: 90, suffix: '%', label: t.about.satisfiedClients, icon: Smile }
   ];
 
   return (
@@ -79,15 +78,13 @@ const About = ({ t }) => {
         {/* Experience Header */}
         <div className="text-center mt-32 mb-12 opacity-0 animate-fade-up" style={{ animationFillMode: 'forwards' }}>
           <p className="text-orange-500 font-bold tracking-widest uppercase mb-3">
-            {isEn ? 'Career Footprints' : 'Jejak Karir & Pengalaman'}
+            {t.about.careerTitle}
           </p>
           <h3 className="text-3xl md:text-5xl font-black text-zinc-900 dark:text-white mb-6">
-            {isEn ? 'Professional Milestones' : 'Tonggak Pencapaian Profesional'}
+            {t.about.careerSubtitle}
           </h3>
           <p className="text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto text-lg leading-relaxed">
-            {isEn 
-              ? 'A brief overview of my extensive experience across different domains, highlighting the time I\'ve dedicated to mastering these skills.' 
-              : 'Berikut adalah ringkasan dedikasi waktu dan pengalaman saya dalam menguasai berbagai bidang profesional selama bertahun-tahun.'}
+            {t.about.careerDesc}
           </p>
         </div>
 
