@@ -1,7 +1,25 @@
-import React from 'react';
-import { Mail, MessageSquare, Send } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, MessageSquare, Send, Loader2 } from 'lucide-react';
 
 const Contact = ({ t }) => {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(!formData.name || !formData.email || !formData.message) return;
+    
+    setIsSubmitting(true);
+    
+    // Memberikan efek delay agar interaktif dan memuaskan secara visual
+    setTimeout(() => {
+      const text = `Halo Danial,%0A%0ASaya *${formData.name}* (${formData.email}).%0A%0A${formData.message}`;
+      window.open(`https://wa.me/62895704121560?text=${text}`, '_blank');
+      setIsSubmitting(false);
+      setFormData({ name: '', email: '', message: '' }); // Reset form
+    }, 1500);
+  };
+
   return (
     <section id="contact" className="py-24 px-6 bg-white dark:bg-[#09090b]">
       <div className="max-w-7xl mx-auto">
@@ -37,13 +55,13 @@ const Contact = ({ t }) => {
                   </div>
                 </a>
 
-                <a href="#" className="flex items-center space-x-4 group">
+                <a href="https://wa.me/62895704121560" target="_blank" rel="noreferrer" className="flex items-center space-x-4 group">
                   <div className="w-14 h-14 bg-orange-500/10 text-orange-500 rounded-2xl flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-all">
                     <MessageSquare size={24} />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-zinc-500 mb-1">{t.contact.waLabel}</p>
-                    <p className="text-zinc-900 dark:text-white font-medium group-hover:text-orange-500 transition-colors">+62 812 3456 7890</p>
+                    <p className="text-zinc-900 dark:text-white font-medium group-hover:text-orange-500 transition-colors">+62 895-7041-21560</p>
                   </div>
                 </a>
               </div>
@@ -57,10 +75,13 @@ const Contact = ({ t }) => {
               <span>{t.contact.formTitle}</span>
             </h3>
 
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="relative">
                 <input 
                   type="text" 
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  required
                   placeholder={t.contact.namePlaceholder}
                   className="w-full bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl py-4 px-4 text-zinc-900 dark:text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
                 />
@@ -68,6 +89,9 @@ const Contact = ({ t }) => {
               <div className="relative">
                 <input 
                   type="email" 
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  required
                   placeholder={t.contact.emailPlaceholder}
                   className="w-full bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl py-4 px-4 text-zinc-900 dark:text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all"
                 />
@@ -75,14 +99,21 @@ const Contact = ({ t }) => {
               <div className="relative">
                 <textarea 
                   rows="4"
+                  value={formData.message}
+                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  required
                   placeholder={t.contact.msgPlaceholder}
                   className="w-full bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl py-4 px-4 text-zinc-900 dark:text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all resize-none"
                 ></textarea>
               </div>
 
-              <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-xl flex items-center justify-center space-x-2 transition-all shadow-lg shadow-orange-500/20 group mt-2">
-                <span className="tracking-widest">{t.contact.btnSubmit}</span>
-                <Send size={18} className="group-hover:translate-x-1 transition-transform" />
+              <button disabled={isSubmitting} className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-70 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl flex items-center justify-center space-x-2 transition-all shadow-lg shadow-orange-500/20 group mt-2">
+                <span className="tracking-widest">{isSubmitting ? 'MENGIRIM...' : t.contact.btnSubmit}</span>
+                {isSubmitting ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : (
+                  <Send size={18} className="group-hover:translate-x-1 transition-transform" />
+                )}
               </button>
             </form>
           </div>
