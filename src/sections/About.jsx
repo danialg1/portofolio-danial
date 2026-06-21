@@ -76,8 +76,23 @@ const About = ({ t }) => {
 
         </div>
 
+        {/* Experience Header */}
+        <div className="text-center mt-32 mb-12 opacity-0 animate-fade-up" style={{ animationFillMode: 'forwards' }}>
+          <p className="text-orange-500 font-bold tracking-widest uppercase mb-3">
+            {isEn ? 'Career Footprints' : 'Jejak Karir & Pengalaman'}
+          </p>
+          <h3 className="text-3xl md:text-5xl font-black text-zinc-900 dark:text-white mb-6">
+            {isEn ? 'Professional Milestones' : 'Tonggak Pencapaian Profesional'}
+          </h3>
+          <p className="text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto text-lg leading-relaxed">
+            {isEn 
+              ? 'A brief overview of my extensive experience across different domains, highlighting the time I\'ve dedicated to mastering these skills.' 
+              : 'Berikut adalah ringkasan dedikasi waktu dan pengalaman saya dalam menguasai berbagai bidang profesional selama bertahun-tahun.'}
+          </p>
+        </div>
+
         {/* Experience Image Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {statsData.map((stat, idx) => (
             <div 
               key={idx} 

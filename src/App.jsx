@@ -7,6 +7,7 @@ import About from './sections/About';
 import Education from './sections/Education';
 import Projects from './sections/Projects';
 import Stack from './sections/Stack';
+import YoutubeSection from './sections/YoutubeSection';
 import Contact from './sections/Contact';
 import Footer from './sections/Footer';
 
@@ -56,6 +57,7 @@ function App() {
       <Education t={t} />
       <Projects t={t} />
       <Stack t={t} lang={lang} />
+      <YoutubeSection t={t} />
       <Contact t={t} />
       <Footer />
       

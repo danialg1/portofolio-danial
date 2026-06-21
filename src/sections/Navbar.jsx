@@ -47,31 +47,32 @@ const Navbar = ({ t, lang, setLang, theme, setTheme }) => {
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           
           {/* Logo */}
-          <a href="#home" onClick={closeMenu} className="text-2xl font-black text-orange-500 tracking-tighter z-50 relative group">
+          <a href="#home" onClick={closeMenu} className="text-2xl font-black text-orange-500 tracking-tighter z-50 relative group flex items-center hover:scale-105 active:scale-95 transition-transform duration-300">
             Danial<span className="text-zinc-900 dark:text-white group-hover:text-orange-500 transition-colors">.</span>
           </a>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8 text-sm font-semibold">
+          <div className="hidden md:flex items-center space-x-8 text-sm font-bold tracking-wide">
             {navLinks.map((link, idx) => (
-              <a key={idx} href={link.href} className="text-zinc-600 hover:text-orange-500 dark:text-zinc-300 dark:hover:text-orange-400 transition-colors">
+              <a key={idx} href={link.href} className="relative group text-zinc-600 hover:text-orange-500 dark:text-zinc-300 transition-colors py-2">
                 {link.name}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-full rounded-full"></span>
               </a>
             ))}
             
-            <div className="flex items-center space-x-4 border-l border-zinc-300 dark:border-zinc-700 pl-6">
+            <div className="flex items-center space-x-4 border-l border-zinc-200 dark:border-zinc-800 pl-6">
               <button 
                 onClick={toggleLang} 
                 aria-label="Toggle Language"
-                className="flex items-center space-x-1 text-zinc-600 hover:text-orange-500 dark:text-zinc-300 dark:hover:text-orange-400 transition-colors"
+                className="flex items-center space-x-1.5 text-xs font-bold text-zinc-600 hover:text-orange-500 dark:text-zinc-300 transition-all bg-zinc-100 dark:bg-zinc-900 px-3 py-1.5 rounded-full hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95 border border-transparent hover:border-orange-500/30"
               >
-                <Languages size={18} />
+                <Languages size={16} />
                 <span className="uppercase">{lang}</span>
               </button>
               <button 
                 onClick={toggleTheme} 
                 aria-label="Toggle Theme"
-                className="text-zinc-600 hover:text-orange-500 dark:text-zinc-300 dark:hover:text-orange-400 transition-colors p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="text-zinc-600 hover:text-orange-500 dark:text-zinc-300 transition-all p-2 rounded-full bg-zinc-100 dark:bg-zinc-900 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-95 border border-transparent hover:border-orange-500/30"
               >
                 {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
               </button>

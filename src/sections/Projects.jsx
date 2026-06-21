@@ -5,34 +5,34 @@ import { TiltCard } from '../components/ui/TiltCard';
 
 const projectsData = [
   {
-    title: "Sistem Keamanan Log",
-    category: "Cyber Security",
-    image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&q=80&w=800",
-    desc: "Aplikasi monitoring log server real-time untuk mendeteksi anomali traffic dan potensi serangan DDoS.",
-    tech: ["Python", "Elasticsearch", "React"],
-    link: "#",
-    github: "#",
-    isSecure: true
-  },
-  {
-    title: "E-Commerce Frontend",
+    title: "Web WasteWise",
     category: "Web Development",
-    image: "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80&w=800",
-    desc: "Platform jual beli online dengan performa tinggi menggunakan arsitektur modern berbasis komponen.",
-    tech: ["Next.js", "TailwindCSS", "Zustand"],
-    link: "#",
-    github: "#",
+    image: "/wastewise.jpg",
+    desc: "Aplikasi cerdas untuk mengedukasi dan membantu manajemen pengelolaan sampah demi pelestarian lingkungan.",
+    tech: ["HTML/CSS", "JavaScript", "PHP"],
+    link: "https://github.com/danialg1/Web-WasteWise",
+    github: "https://github.com/danialg1/Web-WasteWise",
     isSecure: false
   },
   {
-    title: "Vulnerability Scanner",
-    category: "Cyber Security",
-    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800",
-    desc: "Alat pemindai kerentanan web otomatis (XSS, SQLi) yang diintegrasikan ke CI/CD pipeline.",
-    tech: ["Node.js", "Docker", "Bash"],
-    link: "#",
-    github: "#",
-    isSecure: true
+    title: "My Barbershop",
+    category: "Mobile App",
+    image: "/barbershop.jpg",
+    desc: "Frontend aplikasi reservasi My Barbershop berbasis mobile menggunakan Flutter dengan implementasi Clean Architecture.",
+    tech: ["Flutter", "Dart", "Clean Architecture"],
+    link: "https://github.com/danialg1/my-barbershop",
+    github: "https://github.com/danialg1/my-barbershop",
+    isSecure: false
+  },
+  {
+    title: "Sistem Sewa Mobil",
+    category: "Fullstack Web",
+    image: "/sewa-mobil.jpg",
+    desc: "Sistem informasi reservasi penyewaan kendaraan dengan manajemen armada dan transaksi yang terintegrasi database.",
+    tech: ["PHP", "MySQL", "Web Design"],
+    link: "https://github.com/danialg1/sewa_mobil",
+    github: "https://github.com/danialg1/sewa_mobil",
+    isSecure: false
   }
 ];
 
@@ -52,8 +52,9 @@ const Projects = ({ t }) => {
         {/* Project Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projectsData.map((project, idx) => (
-            <TiltCard key={idx} className="h-full">
-              <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl overflow-hidden group h-full flex flex-col hover:border-orange-500/50 transition-colors">
+            <div key={idx} className="h-full opacity-0 animate-fade-up" style={{ animationDelay: `${idx * 150}ms`, animationFillMode: 'forwards' }}>
+              <TiltCard className="h-full">
+                <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl overflow-hidden group h-full flex flex-col hover:border-orange-500/50 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-500">
                 
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
@@ -103,7 +104,8 @@ const Projects = ({ t }) => {
                 </div>
               </div>
             </TiltCard>
-          ))}
+          </div>
+        ))}
         </div>
 
       </div>

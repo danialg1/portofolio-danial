@@ -19,32 +19,34 @@ const Stack = ({ t, lang }) => {
           {techStack.map((tech, idx) => (
             <div 
               key={idx} 
-              className="bg-white dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-800 p-6 rounded-2xl hover:border-orange-500/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-500 group relative overflow-hidden"
+              className="bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 p-6 rounded-[2rem] hover:border-orange-500/50 hover:-translate-y-3 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-500 group relative overflow-hidden opacity-0 animate-spring"
+              style={{ animationDelay: `${idx * 100}ms`, animationFillMode: 'forwards' }}
             >
               {/* Animated Background Glow */}
-              <div className="absolute -right-20 -top-20 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-colors duration-500"></div>
+              <div className="absolute -right-10 -top-10 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/30 group-hover:scale-150 transition-all duration-700 ease-out"></div>
+              <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/30 group-hover:scale-150 transition-all duration-700 ease-out"></div>
 
-              <div className="flex items-center space-x-4 mb-4 relative z-10">
+              <div className="flex items-center space-x-4 mb-5 relative z-10">
                 {/* Logo Container */}
-                <div className="w-14 h-14 p-2.5 bg-zinc-50 dark:bg-zinc-900 rounded-xl flex items-center justify-center group-hover:scale-125 group-hover:-rotate-6 group-hover:shadow-lg transition-all duration-500">
+                <div className="w-16 h-16 p-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-xl group-hover:shadow-orange-500/20 transition-all duration-500">
                   <img 
                     src={tech.logo} 
                     alt={tech.name} 
-                    className="w-full h-full object-contain filter drop-shadow-sm" 
+                    className="w-full h-full object-contain drop-shadow-sm group-hover:drop-shadow-md transition-all duration-500" 
                     loading="lazy" 
                   />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white transition-colors duration-300 group-hover:text-orange-500">
+                  <h3 className="text-xl font-black text-zinc-900 dark:text-white transition-colors duration-300 group-hover:text-orange-500">
                     {tech.name}
                   </h3>
-                  <p className="text-xs font-bold text-orange-500 tracking-wider">
+                  <p className="text-xs font-bold text-orange-500 tracking-widest uppercase">
                     {lang === 'id' ? tech.desc_id : tech.desc_en}
                   </p>
                 </div>
               </div>
               
-              <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed relative z-10">
+              <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed relative z-10 group-hover:text-zinc-800 dark:group-hover:text-zinc-200 transition-colors duration-500">
                 {lang === 'id' ? tech.details_id : tech.details_en}
               </p>
             </div>

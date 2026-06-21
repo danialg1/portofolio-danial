@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
+import { InstagramIcon, FacebookIcon, YoutubeIcon } from '../components/icons';
 import { TerminalText } from '../components/ui/TerminalText';
 
 const Hero = ({ t }) => {
@@ -46,6 +47,21 @@ const Hero = ({ t }) => {
               className="bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white px-8 py-4 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-zinc-200/20 dark:shadow-zinc-900/50"
             >
               {t.hero.btnContact}
+            </a>
+          </div>
+
+          {/* Social Links */}
+          <div className="flex items-center gap-6 pt-6 opacity-0 animate-fade-up" style={{ animationDelay: '600ms', animationFillMode: 'forwards' }}>
+            <span className="text-sm font-black text-zinc-500 dark:text-zinc-400 uppercase tracking-widest">Connect</span>
+            <div className="h-px w-12 bg-zinc-300 dark:bg-zinc-700"></div>
+            <a href="https://www.instagram.com/danial_g1bran/" aria-label="Instagram" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-pink-500 hover:-translate-y-2 hover:scale-125 hover:drop-shadow-[0_0_15px_rgba(236,72,153,0.5)] transition-all duration-300">
+              <InstagramIcon size={28} />
+            </a>
+            <a href="https://www.facebook.com/danial.gibran.03" aria-label="Facebook" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-blue-500 hover:-translate-y-2 hover:scale-125 hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-300">
+              <FacebookIcon size={28} />
+            </a>
+            <a href="https://www.youtube.com/@suka_bola14" aria-label="YouTube" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-red-500 hover:-translate-y-2 hover:scale-125 hover:drop-shadow-[0_0_15px_rgba(239,68,68,0.5)] transition-all duration-300">
+              <YoutubeIcon size={28} />
             </a>
           </div>
         </div>
