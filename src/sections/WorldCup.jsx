@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
-import { Trophy, Activity, Target, CheckCircle2, XCircle, MinusCircle } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Trophy, Activity, CheckCircle2, XCircle, MinusCircle } from 'lucide-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const wcDict = {
   id: { title: 'Piala Dunia FIFA 2026', subtitle: 'Informasi umum, Pertandingan, Klasemen, Statistik', standings: 'Klasemen', stats: 'Pemimpin statistik', team: 'Tim', p: 'T', w: 'M', d: 'S', l: 'K', gf: 'GM', ga: 'GK', gd: 'SG', pts: 'Poin', last5: '5 Terakhir', goals: 'Gol', player: 'Pemain', group: 'Grup A' },
@@ -13,12 +18,80 @@ const wcDict = {
   es: { title: 'Copa Mundial 2026', subtitle: 'Información general, Partidos, Clasificación, Estadísticas', standings: 'Clasificación', stats: 'Líderes', team: 'Equipo', p: 'PJ', w: 'G', d: 'E', l: 'P', gf: 'GF', ga: 'GC', gd: 'DG', pts: 'Pts', last5: 'Últimos 5', goals: 'Goles', player: 'Jugador', group: 'Grupo A' }
 };
 
-const standingsData = [
-  { rank: 1, name: 'Meksiko', flag: '🇲🇽', p: 2, w: 2, d: 0, l: 0, gf: 3, ga: 0, gd: 3, pts: 6, form: ['W', 'W', '-', '-', '-'] },
-  { rank: 2, name: 'Korea Selatan', flag: '🇰🇷', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 2, gd: 0, pts: 3, form: ['L', 'W', '-', '-', '-'] },
-  { rank: 3, name: 'Ceko', flag: '🇨🇿', p: 2, w: 0, d: 1, l: 1, gf: 2, ga: 3, gd: -1, pts: 1, form: ['L', 'D', '-', '-', '-'] },
-  { rank: 4, name: 'Afrika Selatan', flag: '🇿🇦', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 3, gd: -2, pts: 1, form: ['L', 'D', '-', '-', '-'] }
-];
+const allGroups = {
+  A: [
+    { rank: 1, name: 'Meksiko', flag: '🇲🇽', p: 2, w: 2, d: 0, l: 0, gf: 3, ga: 0, gd: 3, pts: 6, form: ['W', 'W', '-', '-', '-'] },
+    { rank: 2, name: 'Republik Korea', flag: '🇰🇷', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 2, gd: 0, pts: 3, form: ['L', 'W', '-', '-', '-'] },
+    { rank: 3, name: 'Ceko', flag: '🇨🇿', p: 2, w: 0, d: 1, l: 1, gf: 2, ga: 3, gd: -1, pts: 1, form: ['L', 'D', '-', '-', '-'] },
+    { rank: 4, name: 'Afrika Selatan', flag: '🇿🇦', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 3, gd: -2, pts: 1, form: ['L', 'D', '-', '-', '-'] }
+  ],
+  B: [
+    { rank: 1, name: 'Kanada', flag: '🇨🇦', p: 2, w: 1, d: 1, l: 0, gf: 7, ga: 1, gd: 6, pts: 4, form: ['W', 'D', '-', '-', '-'] },
+    { rank: 2, name: 'Swiss', flag: '🇨🇭', p: 2, w: 1, d: 1, l: 0, gf: 5, ga: 2, gd: 3, pts: 4, form: ['D', 'W', '-', '-', '-'] },
+    { rank: 3, name: 'Bosnia dan Herzegovina', flag: '🇧🇦', p: 2, w: 0, d: 1, l: 1, gf: 2, ga: 5, gd: -3, pts: 1, form: ['D', 'L', '-', '-', '-'] },
+    { rank: 4, name: 'Qatar', flag: '🇶🇦', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 7, gd: -6, pts: 1, form: ['D', 'L', '-', '-', '-'] }
+  ],
+  C: [
+    { rank: 1, name: 'Brasil', flag: '🇧🇷', p: 2, w: 1, d: 1, l: 0, gf: 4, ga: 1, gd: 3, pts: 4, form: ['W', 'D', '-', '-', '-'] },
+    { rank: 2, name: 'Maroko', flag: '🇲🇦', p: 2, w: 1, d: 1, l: 0, gf: 2, ga: 1, gd: 1, pts: 4, form: ['D', 'W', '-', '-', '-'] },
+    { rank: 3, name: 'Skotlandia', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', p: 2, w: 1, d: 0, l: 1, gf: 1, ga: 1, gd: 0, pts: 3, form: ['W', 'L', '-', '-', '-'] },
+    { rank: 4, name: 'Haiti', flag: '🇭🇹', p: 2, w: 0, d: 0, l: 2, gf: 0, ga: 4, gd: -4, pts: 0, form: ['L', 'L', '-', '-', '-'] }
+  ],
+  D: [
+    { rank: 1, name: 'AS', flag: '🇺🇸', p: 2, w: 2, d: 0, l: 0, gf: 6, ga: 1, gd: 5, pts: 6, form: ['W', 'W', '-', '-', '-'] },
+    { rank: 2, name: 'Australia', flag: '🇦🇺', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 2, gd: 0, pts: 3, form: ['W', 'L', '-', '-', '-'] },
+    { rank: 3, name: 'Paraguay', flag: '🇵🇾', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 4, gd: -2, pts: 3, form: ['L', 'W', '-', '-', '-'] },
+    { rank: 4, name: 'Turki', flag: '🇹🇷', p: 2, w: 0, d: 0, l: 2, gf: 0, ga: 3, gd: -3, pts: 0, form: ['L', 'L', '-', '-', '-'] }
+  ],
+  E: [
+    { rank: 1, name: 'Jerman', flag: '🇩🇪', p: 2, w: 2, d: 0, l: 0, gf: 9, ga: 2, gd: 7, pts: 6, form: ['W', 'W', '-', '-', '-'] },
+    { rank: 2, name: 'Pantai Gading', flag: '🇨🇮', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 2, gd: 0, pts: 3, form: ['W', 'L', '-', '-', '-'] },
+    { rank: 3, name: 'Ekuador', flag: '🇪🇨', p: 2, w: 0, d: 1, l: 1, gf: 0, ga: 1, gd: -1, pts: 1, form: ['L', 'D', '-', '-', '-'] },
+    { rank: 4, name: 'Curaçao', flag: '🇨🇼', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 7, gd: -6, pts: 1, form: ['D', 'L', '-', '-', '-'] }
+  ],
+  F: [
+    { rank: 1, name: 'Belanda', flag: '🇳🇱', p: 2, w: 1, d: 1, l: 0, gf: 7, ga: 3, gd: 4, pts: 4, form: ['W', 'D', '-', '-', '-'] },
+    { rank: 2, name: 'Jepang', flag: '🇯🇵', p: 2, w: 1, d: 1, l: 0, gf: 6, ga: 2, gd: 4, pts: 4, form: ['D', 'W', '-', '-', '-'] },
+    { rank: 3, name: 'Swedia', flag: '🇸🇪', p: 2, w: 1, d: 0, l: 1, gf: 6, ga: 6, gd: 0, pts: 3, form: ['W', 'L', '-', '-', '-'] },
+    { rank: 4, name: 'Tunisia', flag: '🇹🇳', p: 2, w: 0, d: 0, l: 2, gf: 1, ga: 9, gd: -8, pts: 0, form: ['L', 'L', '-', '-', '-'] }
+  ],
+  G: [
+    { rank: 1, name: 'Selandia Baru', flag: '🇳🇿', p: 1, w: 0, d: 1, l: 0, gf: 2, ga: 2, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] },
+    { rank: 2, name: 'IR Iran', flag: '🇮🇷', p: 1, w: 0, d: 1, l: 0, gf: 2, ga: 2, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] },
+    { rank: 3, name: 'Belgia', flag: '🇧🇪', p: 1, w: 0, d: 1, l: 0, gf: 1, ga: 1, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] },
+    { rank: 4, name: 'Mesir', flag: '🇪🇬', p: 1, w: 0, d: 1, l: 0, gf: 1, ga: 1, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] }
+  ],
+  H: [
+    { rank: 1, name: 'Spanyol', flag: '🇪🇸', p: 2, w: 1, d: 1, l: 0, gf: 4, ga: 0, gd: 4, pts: 4, form: ['W', 'D', '-', '-', '-'] },
+    { rank: 2, name: 'Uruguay', flag: '🇺🇾', p: 1, w: 0, d: 1, l: 0, gf: 1, ga: 1, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] },
+    { rank: 3, name: 'Arab Saudi', flag: '🇸🇦', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 5, gd: -4, pts: 1, form: ['D', 'L', '-', '-', '-'] },
+    { rank: 4, name: 'Tanjung Verde', flag: '🇨🇻', p: 1, w: 0, d: 1, l: 0, gf: 0, ga: 0, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] }
+  ],
+  I: [
+    { rank: 1, name: 'Norwegia', flag: '🇳🇴', p: 1, w: 1, d: 0, l: 0, gf: 4, ga: 1, gd: 3, pts: 3, form: ['W', '-', '-', '-', '-'] },
+    { rank: 2, name: 'Prancis', flag: '🇫🇷', p: 1, w: 1, d: 0, l: 0, gf: 3, ga: 1, gd: 2, pts: 3, form: ['W', '-', '-', '-', '-'] },
+    { rank: 3, name: 'Senegal', flag: '🇸🇳', p: 1, w: 0, d: 0, l: 1, gf: 1, ga: 3, gd: -2, pts: 0, form: ['L', '-', '-', '-', '-'] },
+    { rank: 4, name: 'Irak', flag: '🇮🇶', p: 1, w: 0, d: 0, l: 1, gf: 1, ga: 4, gd: -3, pts: 0, form: ['L', '-', '-', '-', '-'] }
+  ],
+  J: [
+    { rank: 1, name: 'Inggris', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', p: 2, w: 2, d: 0, l: 0, gf: 5, ga: 1, gd: 4, pts: 6, form: ['W', 'W', '-', '-', '-'] },
+    { rank: 2, name: 'Nigeria', flag: '🇳🇬', p: 2, w: 1, d: 0, l: 1, gf: 3, ga: 2, gd: 1, pts: 3, form: ['L', 'W', '-', '-', '-'] },
+    { rank: 3, name: 'Jamaika', flag: '🇯🇲', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 3, gd: -2, pts: 1, form: ['D', 'L', '-', '-', '-'] },
+    { rank: 4, name: 'Oman', flag: '🇴🇲', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 4, gd: -3, pts: 1, form: ['L', 'D', '-', '-', '-'] }
+  ],
+  K: [
+    { rank: 1, name: 'Portugal', flag: '🇵🇹', p: 2, w: 1, d: 1, l: 0, gf: 4, ga: 1, gd: 3, pts: 4, form: ['W', 'D', '-', '-', '-'] },
+    { rank: 2, name: 'Kolombia', flag: '🇨🇴', p: 2, w: 1, d: 1, l: 0, gf: 3, ga: 2, gd: 1, pts: 4, form: ['D', 'W', '-', '-', '-'] },
+    { rank: 3, name: 'Kroasia', flag: '🇭🇷', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 3, gd: -1, pts: 3, form: ['L', 'W', '-', '-', '-'] },
+    { rank: 4, name: 'Fiji', flag: '🇫🇯', p: 2, w: 0, d: 0, l: 2, gf: 0, ga: 3, gd: -3, pts: 0, form: ['L', 'L', '-', '-', '-'] }
+  ],
+  L: [
+    { rank: 1, name: 'Argentina', flag: '🇦🇷', p: 2, w: 2, d: 0, l: 0, gf: 5, ga: 0, gd: 5, pts: 6, form: ['W', 'W', '-', '-', '-'] },
+    { rank: 2, name: 'Mali', flag: '🇲🇱', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 2, gd: 0, pts: 3, form: ['W', 'L', '-', '-', '-'] },
+    { rank: 3, name: 'Wales', flag: '🏴󠁧󠁢󠁷󠁬󠁳󠁿', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 3, gd: -2, pts: 1, form: ['D', 'L', '-', '-', '-'] },
+    { rank: 4, name: 'Yordania', flag: '🇯🇴', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 4, gd: -3, pts: 1, form: ['L', 'D', '-', '-', '-'] }
+  ]
+};
 
 const topScorersData = [
   { rank: 1, name: 'Deniz Undav', country: 'Jerman', flag: '🇩🇪', goals: 3, img: 'https://ui-avatars.com/api/?name=Deniz+Undav&background=27272a&color=fff&rounded=true' },
@@ -26,24 +99,53 @@ const topScorersData = [
   { rank: 1, name: 'Lionel Messi', country: 'Argentina', flag: '🇦🇷', goals: 3, img: 'https://ui-avatars.com/api/?name=Lionel+Messi&background=3b82f6&color=fff&rounded=true' }
 ];
 
+const FormIcon = ({ result }) => {
+  if (result === 'W') return <CheckCircle2 size={16} className="text-emerald-500" />;
+  if (result === 'L') return <XCircle size={16} className="text-red-500" />;
+  if (result === 'D') return <MinusCircle size={16} className="text-zinc-400" />;
+  return <div className="w-4 h-4 rounded-full border border-zinc-300 dark:border-zinc-700"></div>;
+};
+
 const WorldCup = ({ lang }) => {
   const [activeTab, setActiveTab] = useState('standings');
-  // Fallback to English if language is missing
+  const [activeGroup, setActiveGroup] = useState('A');
   const t = wcDict[lang] || wcDict['en'];
+  
+  const containerRef = useRef();
 
-  const FormIcon = ({ result }) => {
-    if (result === 'W') return <CheckCircle2 size={16} className="text-emerald-500" />;
-    if (result === 'L') return <XCircle size={16} className="text-red-500" />;
-    if (result === 'D') return <MinusCircle size={16} className="text-zinc-400" />;
-    return <div className="w-4 h-4 rounded-full border border-zinc-300 dark:border-zinc-700"></div>;
-  };
+  useGSAP(() => {
+    // Scroll-triggered entrance for the dashboard cards
+    gsap.from('.dashboard-card', {
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top 85%",
+        toggleActions: "play none none none" // Only play once when scrolled into view
+      },
+      opacity: 0,
+      y: 40,
+      scale: 0.95,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: "power3.out"
+    });
+  }, { scope: containerRef });
+
+  useGSAP(() => {
+    // Dynamic stagger animation when switching groups
+    if (activeTab === 'standings') {
+      gsap.fromTo('.team-row', 
+        { opacity: 0, x: -20 },
+        { opacity: 1, x: 0, duration: 0.4, stagger: 0.08, ease: 'back.out(1.2)', overwrite: true }
+      );
+    }
+  }, { scope: containerRef, dependencies: [activeGroup, activeTab] });
 
   return (
-    <section id="worldcup" className="py-24 px-6 bg-zinc-50 dark:bg-[#09090b] relative overflow-hidden">
+    <section id="worldcup" className="py-24 px-6 bg-zinc-50 dark:bg-[#09090b] relative overflow-hidden" ref={containerRef}>
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* Header with Emblem */}
-        <div className="flex flex-col md:flex-row items-center gap-6 mb-16 opacity-0 animate-fade-up">
+        <div className="flex flex-col md:flex-row items-center gap-6 mb-16 opacity-0 animate-fade-up" style={{ animationFillMode: 'forwards' }}>
           <img 
             src="/world-cup-emblem.png" 
             alt="World Cup 2026 Emblem" 
@@ -56,19 +158,19 @@ const WorldCup = ({ lang }) => {
             <div className="flex flex-wrap gap-3 justify-center md:justify-start mt-4">
               <button 
                 onClick={() => setActiveTab('info')}
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm ${activeTab === 'info' ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
+                className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm hover:-translate-y-1 ${activeTab === 'info' ? 'bg-orange-500 text-white shadow-orange-500/30 shadow-lg' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
               >
                 {t.subtitle.split(',')[0]}
               </button>
               <button 
                 onClick={() => setActiveTab('standings')}
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm ${activeTab === 'standings' ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
+                className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm hover:-translate-y-1 ${activeTab === 'standings' ? 'bg-orange-500 text-white shadow-orange-500/30 shadow-lg' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
               >
                 {t.standings}
               </button>
               <button 
                 onClick={() => setActiveTab('stats')}
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm ${activeTab === 'stats' ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
+                className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm hover:-translate-y-1 ${activeTab === 'stats' ? 'bg-orange-500 text-white shadow-orange-500/30 shadow-lg' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
               >
                 {t.stats}
               </button>
@@ -81,7 +183,7 @@ const WorldCup = ({ lang }) => {
           
           {/* General Info Tab */}
           {activeTab === 'info' && (
-            <div className="xl:col-span-3 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-xl animate-fade-up">
+            <div className="dashboard-card xl:col-span-3 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-xl">
               <h3 className="text-2xl font-bold mb-4">{t.title}</h3>
               <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-3xl">
                 Piala Dunia FIFA 2026 akan menjadi edisi ke-23 dari Piala Dunia FIFA, turnamen sepak bola internasional empat tahunan yang diikuti oleh tim nasional pria anggota FIFA. Turnamen ini akan diselenggarakan secara bersama oleh 16 kota di tiga negara Amerika Utara: Kanada, Meksiko, dan Amerika Serikat.
@@ -89,12 +191,28 @@ const WorldCup = ({ lang }) => {
             </div>
           )}
 
-          {/* Standings Table Tab (Spans 2 columns on XL if Stats is also showing, but let's make them mutually exclusive for mobile, and side-by-side on desktop? The user said "tabs", let's make them exclusive) */}
+          {/* Standings Table Tab */}
           {activeTab === 'standings' && (
-          <div className="xl:col-span-3 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-xl overflow-hidden relative group animate-fade-up">
-            <div className="flex items-center space-x-3 mb-6">
-              <Trophy className="text-orange-500" />
-              <h3 className="text-2xl font-bold">{t.standings} - {t.group}</h3>
+          <div className="dashboard-card xl:col-span-3 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-xl overflow-hidden relative group">
+            
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6 border-b border-zinc-100 dark:border-zinc-800 pb-6">
+              <div className="flex items-center space-x-3">
+                <Trophy className="text-orange-500" />
+                <h3 className="text-2xl font-bold">{t.standings} - {t.group.split(' ')[0]} {activeGroup}</h3>
+              </div>
+              
+              {/* Group Selector UI */}
+              <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-2 md:pb-0 px-1">
+                {Object.keys(allGroups).map(group => (
+                  <button
+                    key={group}
+                    onClick={() => setActiveGroup(group)}
+                    className={`flex-shrink-0 w-11 h-11 rounded-full font-bold transition-all shadow-sm flex items-center justify-center ${activeGroup === group ? 'bg-orange-500 text-white hover:bg-orange-600 scale-110 shadow-orange-500/30 shadow-lg' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700'}`}
+                  >
+                    {group}
+                  </button>
+                ))}
+              </div>
             </div>
             
             <div className="overflow-x-auto custom-scrollbar pb-4">
@@ -114,8 +232,8 @@ const WorldCup = ({ lang }) => {
                   </tr>
                 </thead>
                 <tbody className="text-sm font-medium">
-                  {standingsData.map((team, idx) => (
-                    <tr key={idx} className="border-b border-zinc-100 dark:border-zinc-800/50 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
+                  {allGroups[activeGroup].map((team, idx) => (
+                    <tr key={idx} className="team-row border-b border-zinc-100 dark:border-zinc-800/50 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors cursor-default">
                       <td className="py-4 pl-4 flex items-center space-x-3">
                         <span className="text-zinc-400 w-4 text-center">{team.rank}</span>
                         <div className={`w-1 h-8 rounded-full ${idx < 2 ? 'bg-emerald-500' : 'bg-transparent'}`}></div>
@@ -151,7 +269,7 @@ const WorldCup = ({ lang }) => {
 
           {/* Statistics Leaders Tab */}
           {activeTab === 'stats' && (
-          <div className="xl:col-span-3 max-w-2xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-xl relative group animate-fade-up">
+          <div className="dashboard-card xl:col-span-3 max-w-2xl bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-xl relative group">
             <div className="flex items-center space-x-3 mb-6">
               <Activity className="text-orange-500" />
               <h3 className="text-2xl font-bold">{t.stats}</h3>
@@ -169,7 +287,7 @@ const WorldCup = ({ lang }) => {
 
             <div className="space-y-2">
               {topScorersData.map((player, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">
+                <div key={idx} className="team-row flex items-center justify-between p-3 rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all hover:scale-[1.02] cursor-pointer">
                   <div className="flex items-center space-x-4">
                     <span className="text-zinc-400 font-medium w-4">{player.rank}</span>
                     <img src={player.img} alt={player.name} className="w-10 h-10 rounded-full shadow-sm" />
