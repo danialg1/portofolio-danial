@@ -1,8 +1,20 @@
 import React from 'react';
-import { Download, CheckCircle2 } from 'lucide-react';
+import { Download, CheckCircle2, FolderCheck, Smile } from 'lucide-react';
 import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 
 const About = ({ t }) => {
+  const isEn = t.about.title === 'About Me';
+  const statsData = [
+    { target: 6, suffix: ' Tahun', label: isEn ? 'Video Editing' : 'Video Editing', img: '/video.jpg' },
+    { target: 3, suffix: ' Tahun', label: isEn ? 'Web Programming' : 'Web Programming', img: '/web.jpg' },
+    { target: 1, suffix: ' Tahun', label: isEn ? 'Cyber Security' : 'Cyber Security', img: '/cyber.jpeg' }
+  ];
+
+  const miniStats = [
+    { target: 5, suffix: '+', label: isEn ? 'Completed Projects' : 'Proyek Selesai', icon: FolderCheck },
+    { target: 90, suffix: '%', label: isEn ? 'Satisfied Clients' : 'Klien Puas', icon: Smile }
+  ];
+
   return (
     <section id="about" className="py-24 px-6 bg-zinc-50 dark:bg-zinc-900/50">
       <div className="max-w-7xl mx-auto">
@@ -64,26 +76,53 @@ const About = ({ t }) => {
 
         </div>
 
-        {/* Stats */}
+        {/* Experience Image Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24">
-          <div className="bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 text-center hover:border-orange-500/50 transition-colors">
-            <div className="text-5xl font-black text-orange-500 mb-2">
-              <AnimatedCounter end={3} duration={2000} />+
+          {statsData.map((stat, idx) => (
+            <div 
+              key={idx} 
+              className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-500 hover:-translate-y-4 opacity-0 animate-fade-up"
+              style={{ animationDelay: `${idx * 150}ms`, animationFillMode: 'forwards' }}
+            >
+              {/* Top Banner Image */}
+              <div className="w-full h-64 overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:opacity-0 transition-opacity duration-500 z-10"></div>
+                <img src={stat.img} alt={stat.label} loading="lazy" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
+              </div>
+              
+              {/* Bottom Content */}
+              <div className="p-8 relative z-20 bg-white dark:bg-zinc-900 -mt-8 rounded-t-[2.5rem] flex flex-col items-center text-center">
+                <div className="text-4xl lg:text-5xl font-black text-orange-500 mb-2 flex items-baseline">
+                  <AnimatedCounter target={stat.target} suffix={stat.suffix} />
+                </div>
+                <p className="text-zinc-600 dark:text-zinc-400 font-black text-lg uppercase tracking-widest">{stat.label}</p>
+              </div>
             </div>
-            <p className="text-zinc-600 dark:text-zinc-400 font-medium">{t.about.exp}</p>
-          </div>
-          <div className="bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 text-center hover:border-orange-500/50 transition-colors">
-            <div className="text-5xl font-black text-orange-500 mb-2">
-              <AnimatedCounter end={25} duration={2000} />+
-            </div>
-            <p className="text-zinc-600 dark:text-zinc-400 font-medium">{t.about.proj}</p>
-          </div>
-          <div className="bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 text-center hover:border-orange-500/50 transition-colors">
-            <div className="text-5xl font-black text-orange-500 mb-2">
-              <AnimatedCounter end={100} duration={2000} />%
-            </div>
-            <p className="text-zinc-600 dark:text-zinc-400 font-medium">{t.about.client}</p>
-          </div>
+          ))}
+        </div>
+
+        {/* Mini Stats (Pill Shaped) */}
+        <div className="flex flex-wrap justify-center gap-6 mt-10">
+          {miniStats.map((stat, idx) => {
+            const Icon = stat.icon;
+            return (
+              <div 
+                key={idx} 
+                className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-full px-8 py-5 flex items-center space-x-6 shadow-sm hover:shadow-xl hover:border-orange-500/50 hover:-translate-y-2 transition-all duration-500 opacity-0 animate-fade-up w-full sm:w-auto justify-center"
+                style={{ animationDelay: `${(idx + 3) * 150}ms`, animationFillMode: 'forwards' }}
+              >
+                <div className="p-4 bg-orange-500/10 text-orange-500 rounded-full shrink-0">
+                   <Icon size={28} strokeWidth={2.5} />
+                </div>
+                <div className="text-left">
+                  <div className="text-3xl font-black text-zinc-900 dark:text-white mb-1 leading-none">
+                    <AnimatedCounter target={stat.target} suffix={stat.suffix} />
+                  </div>
+                  <p className="text-zinc-500 dark:text-zinc-400 font-bold text-xs uppercase tracking-widest">{stat.label}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
       </div>
