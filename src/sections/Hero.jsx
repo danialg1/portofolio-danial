@@ -8,10 +8,10 @@ const Hero = ({ t }) => {
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         
         {/* Left Content */}
-        <div className="flex flex-col space-y-6 z-10">
+        <div className="flex flex-col space-y-6 z-40 relative opacity-0 animate-fade-up" style={{ animationFillMode: 'forwards' }}>
           <div className="flex items-center space-x-2">
             <span className="text-orange-500 font-bold">{t.hero.greeting}</span>
-            <span className="text-2xl animate-bounce">👋</span>
+            <span className="text-2xl animate-bounce" style={{ animationDuration: '2s' }}>👋</span>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-black text-zinc-900 dark:text-white tracking-tight leading-tight">
@@ -33,17 +33,17 @@ const Hero = ({ t }) => {
             {t.hero.desc}
           </p>
           
-          <div className="flex flex-wrap items-center gap-4 pt-4">
+          <div className="flex flex-wrap items-center gap-4 pt-4 opacity-0 animate-fade-up" style={{ animationDelay: '400ms', animationFillMode: 'forwards' }}>
             <a 
               href="#projects" 
-              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-lg shadow-orange-500/30 flex items-center space-x-2 group"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-lg shadow-orange-500/30 flex items-center space-x-2 group hover:scale-105 active:scale-95"
             >
               <span>{t.hero.btnProject}</span>
-              <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              <ChevronRight size={20} className="group-hover:translate-x-2 transition-transform duration-300" />
             </a>
             <a 
               href="#contact" 
-              className="bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white px-8 py-4 rounded-full font-bold transition-all"
+              className="bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white px-8 py-4 rounded-full font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-zinc-200/20 dark:shadow-zinc-900/50"
             >
               {t.hero.btnContact}
             </a>
