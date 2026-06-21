@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Download, CheckCircle2, FolderCheck, Smile } from 'lucide-react';
 import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 
@@ -19,17 +20,29 @@ const About = ({ t }) => {
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <p className="text-orange-500 font-bold tracking-widest uppercase mb-2">{t.about.title}</p>
           <h2 className="text-3xl md:text-5xl font-black text-zinc-900 dark:text-white">
             {t.about.subtitle}
           </h2>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
           {/* Illustration Left */}
-          <div className="relative flex justify-center items-center order-2 lg:order-1">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative flex justify-center items-center order-2 lg:order-1"
+          >
             <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 to-transparent rounded-full blur-3xl"></div>
             <img 
               src="/illustration.webp" 
@@ -37,10 +50,16 @@ const About = ({ t }) => {
               loading="lazy"
               className="relative z-10 w-full max-w-md object-contain hover:-translate-y-4 transition-transform duration-700 drop-shadow-2xl"
             />
-          </div>
+          </motion.div>
 
           {/* Text Right */}
-          <div className="space-y-6 order-1 lg:order-2">
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="space-y-6 order-1 lg:order-2"
+          >
             <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
               {t.about.p1}
             </p>
@@ -71,12 +90,18 @@ const About = ({ t }) => {
               <Download size={18} />
               <span>{t.about.cv}</span>
             </a>
-          </div>
+          </motion.div>
 
         </div>
 
         {/* Experience Header */}
-        <div className="text-center mt-32 mb-12 opacity-0 animate-fade-up" style={{ animationFillMode: 'forwards' }}>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mt-32 mb-12"
+        >
           <p className="text-orange-500 font-bold tracking-widest uppercase mb-3">
             {t.about.careerTitle}
           </p>
@@ -86,15 +111,18 @@ const About = ({ t }) => {
           <p className="text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto text-lg leading-relaxed">
             {t.about.careerDesc}
           </p>
-        </div>
+        </motion.div>
 
         {/* Experience Image Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {statsData.map((stat, idx) => (
-            <div 
+            <motion.div 
               key={idx} 
-              className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-500 hover:-translate-y-4 opacity-0 animate-fade-up"
-              style={{ animationDelay: `${idx * 150}ms`, animationFillMode: 'forwards' }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.2, duration: 0.6 }}
+              className="group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-500 hover:-translate-y-4"
             >
               {/* Top Banner Image */}
               <div className="w-full h-64 overflow-hidden relative">
@@ -109,7 +137,7 @@ const About = ({ t }) => {
                 </div>
                 <p className="text-zinc-600 dark:text-zinc-400 font-black text-lg uppercase tracking-widest">{stat.label}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -118,10 +146,13 @@ const About = ({ t }) => {
           {miniStats.map((stat, idx) => {
             const Icon = stat.icon;
             return (
-              <div 
+              <motion.div 
                 key={idx} 
-                className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-full px-8 py-5 flex items-center space-x-6 shadow-sm hover:shadow-xl hover:border-orange-500/50 hover:-translate-y-2 transition-all duration-500 opacity-0 animate-fade-up w-full sm:w-auto justify-center"
-                style={{ animationDelay: `${(idx + 3) * 150}ms`, animationFillMode: 'forwards' }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.2 + 0.4, duration: 0.6 }}
+                className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-full px-8 py-5 flex items-center space-x-6 shadow-sm hover:shadow-xl hover:border-orange-500/50 hover:-translate-y-2 transition-all duration-500 w-full sm:w-auto justify-center"
               >
                 <div className="p-4 bg-orange-500/10 text-orange-500 rounded-full shrink-0">
                    <Icon size={28} strokeWidth={2.5} />
@@ -132,7 +163,7 @@ const About = ({ t }) => {
                   </div>
                   <p className="text-zinc-500 dark:text-zinc-400 font-bold text-xs uppercase tracking-widest">{stat.label}</p>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

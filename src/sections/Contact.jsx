@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Mail, MessageSquare, Send, Loader2 } from 'lucide-react';
 
 const Contact = ({ t }) => {
@@ -25,18 +26,29 @@ const Contact = ({ t }) => {
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
           <p className="text-orange-500 font-bold tracking-widest uppercase mb-2">{t.contact.title}</p>
           <h2 className="text-3xl md:text-5xl font-black text-zinc-900 dark:text-white max-w-2xl mx-auto">
             {t.contact.subtitle}
           </h2>
-        </div>
+        </motion.div>
 
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
           
           {/* Contact Info */}
-          <div className="space-y-8">
-            <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-3xl">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-8"
+          >
+            <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-3xl hover:border-orange-500/50 hover:shadow-2xl transition-all duration-300">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                 <span className="text-xs font-bold text-zinc-500 tracking-widest">{t.contact.sysStatus}</span>
@@ -66,10 +78,16 @@ const Contact = ({ t }) => {
                 </a>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Contact Form */}
-          <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-3xl">
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-3xl hover:border-orange-500/50 hover:shadow-2xl transition-all duration-300"
+          >
             <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center space-x-2">
               <Terminal size={20} className="text-orange-500" />
               <span>{t.contact.formTitle}</span>
@@ -107,16 +125,21 @@ const Contact = ({ t }) => {
                 ></textarea>
               </div>
 
-              <button disabled={isSubmitting} className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-70 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl flex items-center justify-center space-x-2 transition-all shadow-lg shadow-orange-500/20 group mt-2">
+              <motion.button 
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={isSubmitting} 
+                className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-70 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl flex items-center justify-center space-x-2 transition-all shadow-lg shadow-orange-500/20 group mt-2"
+              >
                 <span className="tracking-widest">{isSubmitting ? 'MENGIRIM...' : t.contact.btnSubmit}</span>
                 {isSubmitting ? (
                   <Loader2 size={18} className="animate-spin" />
                 ) : (
                   <Send size={18} className="group-hover:translate-x-1 transition-transform" />
                 )}
-              </button>
+              </motion.button>
             </form>
-          </div>
+          </motion.div>
 
         </div>
       </div>

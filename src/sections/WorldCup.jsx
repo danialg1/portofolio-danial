@@ -96,7 +96,19 @@ const allGroups = {
 const topScorersData = [
   { rank: 1, name: 'Deniz Undav', country: 'Jerman', flag: '🇩🇪', goals: 3, img: 'https://ui-avatars.com/api/?name=Deniz+Undav&background=27272a&color=fff&rounded=true' },
   { rank: 1, name: 'Jonathan David', country: 'Kanada', flag: '🇨🇦', goals: 3, img: 'https://ui-avatars.com/api/?name=Jonathan+David&background=ef4444&color=fff&rounded=true' },
-  { rank: 1, name: 'Lionel Messi', country: 'Argentina', flag: '🇦🇷', goals: 3, img: 'https://ui-avatars.com/api/?name=Lionel+Messi&background=3b82f6&color=fff&rounded=true' }
+  { rank: 1, name: 'Lionel Messi', country: 'Argentina', flag: '🇦🇷', goals: 3, img: 'https://ui-avatars.com/api/?name=Lionel+Messi&background=3b82f6&color=fff&rounded=true' },
+  { rank: 4, name: 'Ayase Ueda', country: 'Jepang', flag: '🇯🇵', goals: 2, img: 'https://ui-avatars.com/api/?name=Ayase+Ueda&background=27272a&color=fff&rounded=true' },
+  { rank: 4, name: 'Cody Gakpo', country: 'Belanda', flag: '🇳🇱', goals: 2, img: 'https://ui-avatars.com/api/?name=Cody+Gakpo&background=f97316&color=fff&rounded=true' },
+  { rank: 4, name: 'Crysencio Summerville', country: 'Belanda', flag: '🇳🇱', goals: 2, img: 'https://ui-avatars.com/api/?name=Crysencio+Summerville&background=f97316&color=fff&rounded=true' },
+  { rank: 4, name: 'Cyle Larin', country: 'Kanada', flag: '🇨🇦', goals: 2, img: 'https://ui-avatars.com/api/?name=Cyle+Larin&background=ef4444&color=fff&rounded=true' },
+  { rank: 4, name: 'Daichi Kamada', country: 'Jepang', flag: '🇯🇵', goals: 2, img: 'https://ui-avatars.com/api/?name=Daichi+Kamada&background=27272a&color=fff&rounded=true' },
+  { rank: 4, name: 'Erling Haaland', country: 'Norwegia', flag: '🇳🇴', goals: 2, img: 'https://ui-avatars.com/api/?name=Erling+Haaland&background=ef4444&color=fff&rounded=true' },
+  { rank: 4, name: 'Folarin Balogun', country: 'Amerika Serikat', flag: '🇺🇸', goals: 2, img: 'https://ui-avatars.com/api/?name=Folarin+Balogun&background=3b82f6&color=fff&rounded=true' },
+  { rank: 4, name: 'Harry Kane', country: 'Inggris', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', goals: 2, img: 'https://ui-avatars.com/api/?name=Harry+Kane&background=27272a&color=fff&rounded=true' },
+  { rank: 4, name: 'Ismael Saibari', country: 'Maroko', flag: '🇲🇦', goals: 2, img: 'https://ui-avatars.com/api/?name=Ismael+Saibari&background=ef4444&color=fff&rounded=true' },
+  { rank: 4, name: 'Johan Manzambi', country: 'Swiss', flag: '🇨🇭', goals: 2, img: 'https://ui-avatars.com/api/?name=Johan+Manzambi&background=ef4444&color=fff&rounded=true' },
+  { rank: 4, name: 'Matheus Cunha', country: 'Brasil', flag: '🇧🇷', goals: 2, img: 'https://ui-avatars.com/api/?name=Matheus+Cunha&background=eab308&color=fff&rounded=true' },
+  { rank: 4, name: 'Vinícius Júnior', country: 'Brasil', flag: '🇧🇷', goals: 2, img: 'https://ui-avatars.com/api/?name=Vinicius+Junior&background=eab308&color=fff&rounded=true' }
 ];
 
 const FormIcon = ({ result }) => {
@@ -285,7 +297,7 @@ const WorldCup = ({ lang }) => {
               <span>{t.goals}</span>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
               {topScorersData.map((player, idx) => (
                 <div key={idx} className="team-row flex items-center justify-between p-3 rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all hover:scale-[1.02] cursor-pointer">
                   <div className="flex items-center space-x-4">
