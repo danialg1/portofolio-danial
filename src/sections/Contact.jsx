@@ -57,8 +57,8 @@ const Contact = ({ t }) => {
               <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mb-8">{t.contact.uplink}</h3>
 
               <div className="space-y-6">
-                <a href="mailto:danialgibran0@gmail.com" className="flex items-center space-x-4 group">
-                  <div className="w-14 h-14 bg-orange-500/10 text-orange-500 rounded-2xl flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-all">
+                <a href="mailto:danialgibran0@gmail.com" aria-label="Send email to danialgibran0@gmail.com" className="flex items-center space-x-4 group">
+                  <div className="w-14 h-14 bg-orange-500/10 text-orange-500 rounded-2xl flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-all" aria-hidden="true">
                     <Mail size={24} />
                   </div>
                   <div>
@@ -67,8 +67,8 @@ const Contact = ({ t }) => {
                   </div>
                 </a>
 
-                <a href="https://wa.me/62895704121560" target="_blank" rel="noreferrer" className="flex items-center space-x-4 group">
-                  <div className="w-14 h-14 bg-orange-500/10 text-orange-500 rounded-2xl flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-all">
+                <a href="https://wa.me/62895704121560" aria-label="Contact via WhatsApp at +62 895-7041-21560" target="_blank" rel="noreferrer" className="flex items-center space-x-4 group">
+                  <div className="w-14 h-14 bg-orange-500/10 text-orange-500 rounded-2xl flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-all" aria-hidden="true">
                     <MessageSquare size={24} />
                   </div>
                   <div>
@@ -97,6 +97,7 @@ const Contact = ({ t }) => {
               <div className="relative">
                 <input 
                   type="text" 
+                  aria-label={t.contact.namePlaceholder}
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   required
@@ -107,6 +108,7 @@ const Contact = ({ t }) => {
               <div className="relative">
                 <input 
                   type="email" 
+                  aria-label={t.contact.emailPlaceholder}
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   required
@@ -117,6 +119,7 @@ const Contact = ({ t }) => {
               <div className="relative">
                 <textarea 
                   rows="4"
+                  aria-label={t.contact.msgPlaceholder}
                   value={formData.message}
                   onChange={(e) => setFormData({...formData, message: e.target.value})}
                   required

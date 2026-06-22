@@ -170,18 +170,21 @@ const WorldCup = ({ lang }) => {
             <div className="flex flex-wrap gap-3 justify-center md:justify-start mt-4">
               <button 
                 onClick={() => setActiveTab('info')}
+                aria-label={`Tab: ${t.subtitle.split(',')[0]}`}
                 className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm hover:-translate-y-1 ${activeTab === 'info' ? 'bg-orange-500 text-white shadow-orange-500/30 shadow-lg' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
               >
                 {t.subtitle.split(',')[0]}
               </button>
               <button 
                 onClick={() => setActiveTab('standings')}
+                aria-label={`Tab: ${t.standings}`}
                 className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm hover:-translate-y-1 ${activeTab === 'standings' ? 'bg-orange-500 text-white shadow-orange-500/30 shadow-lg' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
               >
                 {t.standings}
               </button>
               <button 
                 onClick={() => setActiveTab('stats')}
+                aria-label={`Tab: ${t.stats}`}
                 className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm hover:-translate-y-1 ${activeTab === 'stats' ? 'bg-orange-500 text-white shadow-orange-500/30 shadow-lg' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
               >
                 {t.stats}
@@ -214,11 +217,14 @@ const WorldCup = ({ lang }) => {
               </div>
               
               {/* Group Selector UI */}
-              <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-2 md:pb-0 px-1">
+              <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-2 md:pb-0 px-1" role="tablist">
                 {Object.keys(allGroups).map(group => (
                   <button
                     key={group}
                     onClick={() => setActiveGroup(group)}
+                    aria-label={`Select Group ${group}`}
+                    role="tab"
+                    aria-selected={activeGroup === group}
                     className={`flex-shrink-0 w-11 h-11 rounded-full font-bold transition-all shadow-sm flex items-center justify-center ${activeGroup === group ? 'bg-orange-500 text-white hover:bg-orange-600 scale-110 shadow-orange-500/30 shadow-lg' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700'}`}
                   >
                     {group}
@@ -316,7 +322,7 @@ const WorldCup = ({ lang }) => {
               ))}
             </div>
 
-            <button className="w-full mt-6 py-3 rounded-xl border border-zinc-200 dark:border-zinc-800 font-bold text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+            <button aria-label="Lihat semua statistik" className="w-full mt-6 py-3 rounded-xl border border-zinc-200 dark:border-zinc-800 font-bold text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
               Lihat semua statistik
             </button>
           </div>

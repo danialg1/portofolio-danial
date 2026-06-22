@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { dict } from './data/constants';
 
 import Navbar from './sections/Navbar';
 import Hero from './sections/Hero';
-import About from './sections/About';
-import Education from './sections/Education';
-import Projects from './sections/Projects';
-import Stack from './sections/Stack';
-import YoutubeSection from './sections/YoutubeSection';
-import WorldCup from './sections/WorldCup';
-import Contact from './sections/Contact';
-import Footer from './sections/Footer';
 import { WorldCupTheme } from './components/ui/WorldCupTheme';
+
+// Lazy loading components that are below the fold to improve LCP and TBT
+const About = lazy(() => import('./sections/About'));
+const Education = lazy(() => import('./sections/Education'));
+const Projects = lazy(() => import('./sections/Projects'));
+const Stack = lazy(() => import('./sections/Stack'));
+const YoutubeSection = lazy(() => import('./sections/YoutubeSection'));
+const WorldCup = lazy(() => import('./sections/WorldCup'));
+const Contact = lazy(() => import('./sections/Contact'));
+const Footer = lazy(() => import('./sections/Footer'));
 
 function App() {
   // State for Language: default 'id'
@@ -21,7 +23,7 @@ function App() {
   // State for Theme: default 'light' to match the clean look of the reference
   const [theme, setTheme] = useState('light');
 
-  // Effect to apply theme class to HTML root
+  // Effect to apply theme class and HTML lang attribute
   useEffect(() => {
     const root = window.document.documentElement;
     if (theme === 'dark') {
@@ -30,6 +32,11 @@ function App() {
       root.classList.remove('dark');
     }
   }, [theme]);
+
+  // Effect to apply document language
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   // Audio state
   const [isPlaying, setIsPlaying] = useState(false);
@@ -57,17 +64,20 @@ function App() {
       <Navbar t={t} lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />
       
       <Hero t={t} />
-      <About t={t} />
-      <Education t={t} />
-      <Projects t={t} />
-      <Stack t={t} lang={lang} />
-      <YoutubeSection t={t} />
       
-      {/* World Cup 2026 Dashboard Integration */}
-      <WorldCup lang={lang} />
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <About t={t} />
+        <Education t={t} />
+        <Projects t={t} />
+        <Stack t={t} lang={lang} />
+        <YoutubeSection t={t} />
+        
+        {/* World Cup 2026 Dashboard Integration */}
+        <WorldCup lang={lang} />
 
-      <Contact t={t} />
-      <Footer />
+        <Contact t={t} />
+        <Footer />
+      </Suspense>
       
       {/* Floating Music Button */}
       <button

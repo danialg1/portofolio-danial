@@ -26,6 +26,7 @@ const YoutubeSection = ({ t }) => {
               href="https://www.youtube.com/@suka_bola14" 
               target="_blank" 
               rel="noreferrer"
+              aria-label="Kunjungi Channel YouTube Suka Bola 14"
               className="block relative bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[2rem] overflow-hidden group hover:border-red-500/50 hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500"
             >
               

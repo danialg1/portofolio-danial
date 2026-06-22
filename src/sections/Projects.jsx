@@ -57,10 +57,11 @@ const Projects = ({ t }) => {
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            aria-label="View All Projects"
             className="flex items-center space-x-2 text-orange-500 font-bold hover:text-orange-600 transition-colors group"
           >
             <span>{t.projects.viewAll}</span>
-            <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+            <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" aria-hidden="true" />
           </motion.button>
         </motion.div>
 

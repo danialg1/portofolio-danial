@@ -72,15 +72,17 @@ const Hero = ({ t }) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href="#projects" 
+              aria-label="View Projects"
               className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-lg shadow-orange-500/30 flex items-center space-x-2 group"
             >
               <span>{t.hero.btnProject}</span>
-              <ChevronRight size={20} className="group-hover:translate-x-2 transition-transform duration-300" />
+              <ChevronRight size={20} className="group-hover:translate-x-2 transition-transform duration-300" aria-hidden="true" />
             </motion.a>
             <motion.a 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href="#contact" 
+              aria-label="Contact Me"
               className="bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white px-8 py-4 rounded-full font-bold transition-all shadow-lg shadow-zinc-200/20 dark:shadow-zinc-900/50"
             >
               {t.hero.btnContact}
@@ -124,8 +126,10 @@ const Hero = ({ t }) => {
           <div className="relative w-[280px] h-[350px] md:w-[360px] md:h-[450px] z-20 transition-transform hover:scale-105 duration-500 flex justify-center items-end pointer-events-none">
             <img 
               src="/profil_transparent.webp" 
-              alt="Danial Gibran" 
+              alt="Danial Gibran - Profile Photo" 
               fetchPriority="high"
+              width="360"
+              height="450"
               className="w-[150%] h-[150%] scale-[1.3] translate-y-6 md:translate-y-8 object-contain object-bottom drop-shadow-[0_20px_30px_rgba(0,0,0,0.3)] pointer-events-auto"
             />
           </div>
