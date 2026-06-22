@@ -8,16 +8,18 @@ const Hero = ({ t }) => {
   return (
     <section id="home" className="relative pt-32 pb-20 px-6 min-h-screen flex items-center overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div 
           animate={{ y: [-20, 20, -20], x: [-10, 10, -10] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-orange-500/10 dark:bg-orange-500/5 blur-[120px]" 
+          className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full opacity-40 dark:opacity-20"
+          style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.4) 0%, rgba(249,115,22,0) 70%)', willChange: 'transform' }} 
         />
         <motion.div 
           animate={{ y: [20, -20, 20], x: [10, -10, 10] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[20%] -right-[10%] w-[30%] h-[50%] rounded-full bg-orange-400/10 dark:bg-orange-400/5 blur-[100px]" 
+          className="absolute top-[20%] -right-[10%] w-[30%] h-[50%] rounded-full opacity-40 dark:opacity-20"
+          style={{ background: 'radial-gradient(circle, rgba(251,146,60,0.4) 0%, rgba(251,146,60,0) 70%)', willChange: 'transform' }} 
         />
       </div>
 
@@ -120,7 +122,7 @@ const Hero = ({ t }) => {
           className="relative flex justify-center lg:justify-end items-center"
         >
           {/* Abstract Orange Blob Animation */}
-          <div className="absolute w-[300px] h-[300px] md:w-[450px] md:h-[450px] bg-orange-500/80 dark:bg-orange-500/60 blob-shape animate-blob shadow-[0_0_80px_rgba(249,115,22,0.4)]"></div>
+          <div className="absolute w-[300px] h-[300px] md:w-[450px] md:h-[450px] blob-shape animate-blob opacity-80 dark:opacity-60 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(249,115,22,1) 30%, rgba(249,115,22,0.6) 80%, rgba(249,115,22,0) 100%)', willChange: 'transform, border-radius' }}></div>
           
           {/* Profile Picture */}
           <div className="relative w-[280px] h-[350px] md:w-[360px] md:h-[450px] z-20 transition-transform hover:scale-105 duration-500 flex justify-center items-end pointer-events-none">
