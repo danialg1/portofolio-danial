@@ -47,11 +47,12 @@ const Navbar = ({ t, lang, setLang, theme, setTheme }) => {
   const closeMenu = () => setIsOpen(false);
 
   const navLinks = [
-    { name: t.nav.home, href: '#home' },
-    { name: t.nav.about, href: '#about' },
-    { name: t.education ? t.education.title.split(' ')[0] : 'Education', href: '#education' },
-    { name: t.nav.projects, href: '#projects' },
-    { name: t.nav.contact, href: '#contact' },
+    { name: t.nav.home, href: '#home', aria: 'Navigate to Home' },
+    { name: t.nav.about, href: '#about', aria: 'Navigate to About' },
+    { name: t.education ? t.education.title.split(' ')[0] : 'Education', href: '#education', aria: 'Navigate to Education' },
+    { name: t.nav.projects, href: '#projects', aria: 'Navigate to Projects' },
+    { name: t.stack && t.stack.title ? t.stack.title.split(' ')[0] + ' & Certs' : 'Skills & Certs', href: '#stack', aria: 'Navigate to Skills and Certificates' },
+    { name: t.nav.contact, href: '#contact', aria: 'Navigate to Contact' },
   ];
 
   return (
@@ -67,7 +68,7 @@ const Navbar = ({ t, lang, setLang, theme, setTheme }) => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8 text-sm font-bold tracking-wide">
             {navLinks.map((link, idx) => (
-              <a key={idx} href={link.href} className="relative group text-zinc-600 hover:text-orange-500 dark:text-zinc-300 transition-colors py-2">
+              <a key={idx} href={link.href} aria-label={link.aria} className="relative group text-zinc-600 hover:text-orange-500 dark:text-zinc-300 transition-colors py-2">
                 {link.name}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-full rounded-full"></span>
               </a>
@@ -135,8 +136,9 @@ const Navbar = ({ t, lang, setLang, theme, setTheme }) => {
               key={idx} 
               href={link.href} 
               onClick={closeMenu}
+              aria-label={link.aria}
               style={{ transitionDelay: `${isOpen ? 100 + (idx * 75) : 0}ms` }}
-              className={`text-4xl font-black text-zinc-900 dark:text-white hover:text-orange-500 transition-all duration-500 w-full text-center py-2 ${isOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-90'}`}
+              className={`text-3xl md:text-4xl font-black text-zinc-900 dark:text-white hover:text-orange-500 transition-all duration-500 w-full text-center py-2 ${isOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-90'}`}
             >
               {link.name}
             </a>

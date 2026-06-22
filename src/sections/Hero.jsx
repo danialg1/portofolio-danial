@@ -29,7 +29,7 @@ const Hero = ({ t }) => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex flex-col space-y-6"
+          className="flex flex-col space-y-6 relative z-30"
         >
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
