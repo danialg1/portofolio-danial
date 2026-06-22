@@ -130,6 +130,7 @@ const Hero = ({ t }) => {
               src="/profil_transparent.webp" 
               alt="Danial Gibran - Profile Photo" 
               fetchPriority="high"
+              decoding="async"
               width="360"
               height="450"
               className="w-[150%] h-[150%] scale-[1.3] translate-y-6 md:translate-y-8 object-contain object-bottom drop-shadow-[0_20px_30px_rgba(0,0,0,0.3)] pointer-events-auto"
