@@ -57,7 +57,7 @@ const Navbar = ({ t, lang, setLang, theme, setTheme }) => {
 
   return (
     <>
-      <nav className={`fixed w-full z-[60] transition-all duration-500 ${scrolled ? 'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-800 shadow-sm py-0' : 'bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md py-2'}`}>
+      <nav className={`fixed w-full z-[60] transition-all duration-500 ${scrolled ? 'bg-white/40 dark:bg-[#09090b]/40 backdrop-blur-2xl saturate-150 border-b border-white/50 dark:border-zinc-800/50 shadow-[0_8px_32px_rgba(0,0,0,0.08)] py-2' : 'bg-white/10 dark:bg-[#09090b]/10 backdrop-blur-md border-b border-transparent py-4'}`}>
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           
           {/* Logo */}
@@ -124,7 +124,7 @@ const Navbar = ({ t, lang, setLang, theme, setTheme }) => {
       </nav>
 
       {/* Mobile Fullscreen Menu */}
-      <div className={`fixed inset-0 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-3xl z-50 flex flex-col items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden ${isOpen ? 'opacity-100 visible translate-y-0 scale-100' : 'opacity-0 invisible -translate-y-8 scale-105'}`}>
+      <div className={`fixed inset-0 bg-white/60 dark:bg-zinc-950/60 backdrop-blur-3xl saturate-150 z-50 flex flex-col items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden ${isOpen ? 'opacity-100 visible translate-y-0 scale-100' : 'opacity-0 invisible -translate-y-8 scale-105'}`}>
         
         {/* Decorative Background Elements */}
         <div className="absolute top-20 left-10 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>

@@ -1,15 +1,16 @@
 <!doctype html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Portofolio Danial Gibran - Fullstack Developer & Cyber Security Enthusiast" />
-    <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#f97316" />
-    <link rel="preload" href="/profil_transparent.webp" as="image" fetchpriority="high" />
-    <title>Portofolio Danial Gibran</title>
-    <script type="application/ld+json">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portofolio Danial Gibran - Fullstack Developer & Cyber Security Enthusiast" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#f97316" />
+  <link rel="preload" href="/profil_transparent.webp" as="image" fetchpriority="high" />
+  <title>Portofolio Danial Gibran</title>
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
@@ -36,26 +37,63 @@
       "sameAs": [
         "https://github.com/danialg1",
         "https://www.instagram.com/danial_g1bran/",
-        "YOUR_LINKEDIN_URL_HERE",
+        "www.linkedin.com/in/danial-gibran-342370288",
         "YOUR_YOUTUBE_URL_HERE"
       ]
     }
     </script>
-  </head>
-  <body>
-    <div id="root">
-      <style>
-        #initial-loader { position: fixed; inset: 0; background-color: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; }
-        @media (prefers-color-scheme: dark) { #initial-loader { background-color: #09090b; } }
-        .spinner { width: 48px; height: 48px; border: 4px solid #f97316; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        .loader-text { color: #f97316; font-family: system-ui, -apple-system, sans-serif; font-weight: 800; font-size: 1.5rem; margin-top: 1.5rem; letter-spacing: 0.05em; }
-      </style>
-      <div id="initial-loader">
-        <div class="spinner"></div>
-        <h1 class="loader-text">Danial Gibran</h1>
-      </div>
+</head>
+
+<body>
+  <div id="root">
+    <style>
+      #initial-loader {
+        position: fixed;
+        inset: 0;
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        #initial-loader {
+          background-color: #09090b;
+        }
+      }
+
+      .spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid #f97316;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loader-text {
+        color: #f97316;
+        font-family: system-ui, -apple-system, sans-serif;
+        font-weight: 800;
+        font-size: 1.5rem;
+        margin-top: 1.5rem;
+        letter-spacing: 0.05em;
+      }
+    </style>
+    <div id="initial-loader">
+      <div class="spinner"></div>
+      <h1 class="loader-text">Danial Gibran</h1>
     </div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+  </div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>
