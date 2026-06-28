@@ -1,21 +1,22 @@
 import React, { useState, useRef } from 'react';
-import { Trophy, Activity, CheckCircle2, XCircle, MinusCircle } from 'lucide-react';
+import { Trophy, Activity, CheckCircle2, XCircle, MinusCircle, ZoomIn } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const wcDict = {
-  id: { title: 'Piala Dunia FIFA 2026', subtitle: 'Informasi umum, Pertandingan, Klasemen, Statistik', standings: 'Klasemen', stats: 'Pemimpin statistik', team: 'Tim', p: 'T', w: 'M', d: 'S', l: 'K', gf: 'GM', ga: 'GK', gd: 'SG', pts: 'Poin', last5: '5 Terakhir', goals: 'Gol', player: 'Pemain', group: 'Grup A' },
-  en: { title: 'FIFA World Cup 2026', subtitle: 'General Info, Matches, Standings, Statistics', standings: 'Standings', stats: 'Stat Leaders', team: 'Team', p: 'P', w: 'W', d: 'D', l: 'L', gf: 'GF', ga: 'GA', gd: 'GD', pts: 'Pts', last5: 'Last 5', goals: 'Goals', player: 'Player', group: 'Group A' },
-  ar: { title: 'كأس العالم 2026', subtitle: 'معلومات عامة، مباريات، ترتيب، إحصائيات', standings: 'الترتيب', stats: 'قادة الإحصائيات', team: 'فريق', p: 'ل', w: 'ف', d: 'ت', l: 'خ', gf: 'أ.ل', ga: 'أ.ع', gd: 'ف.أ', pts: 'نقاط', last5: 'آخر 5', goals: 'أهداف', player: 'لاعب', group: 'المجموعة أ' },
-  ru: { title: 'Чемпионат мира 2026', subtitle: 'Общая информация, Матчи, Турнирная таблица, Статистика', standings: 'Таблица', stats: 'Лидеры', team: 'Команда', p: 'И', w: 'В', d: 'Н', l: 'П', gf: 'ЗГ', ga: 'ПГ', gd: 'РГ', pts: 'Очки', last5: 'Последние 5', goals: 'Голы', player: 'Игрок', group: 'Группа A' },
-  hi: { title: 'फीफा विश्व कप 2026', subtitle: 'सामान्य जानकारी, मैच, स्टैंडिंग, सांख्यिकी', standings: 'स्टैंडिंग', stats: 'सांख्यिकी', team: 'टीम', p: 'P', w: 'W', d: 'D', l: 'L', gf: 'GF', ga: 'GA', gd: 'GD', pts: 'Pts', last5: 'अंतिम 5', goals: 'लक्ष्य', player: 'खिलाड़ी', group: 'समूह A' },
-  zh: { title: '2026 国际足联世界杯', subtitle: '一般信息, 比赛, 积分榜, 统计', standings: '积分榜', stats: '统计领先者', team: '球队', p: '场', w: '胜', d: '平', l: '负', gf: '进', ga: '失', gd: '净', pts: '分', last5: '近5场', goals: '进球', player: '球员', group: 'A组' },
-  ms: { title: 'Piala Dunia FIFA 2026', subtitle: 'Maklumat Umum, Perlawanan, Kedudukan, Statistik', standings: 'Kedudukan', stats: 'Pemimpin Statistik', team: 'Pasukan', p: 'P', w: 'M', d: 'S', l: 'K', gf: 'JG', ga: 'GB', gd: 'PG', pts: 'Mata', last5: '5 Terakhir', goals: 'Gol', player: 'Pemain', group: 'Kumpulan A' },
-  it: { title: 'Coppa del Mondo 2026', subtitle: 'Informazioni, Partite, Classifiche, Statistiche', standings: 'Classifica', stats: 'Leader Statistiche', team: 'Squadra', p: 'G', w: 'V', d: 'P', l: 'S', gf: 'GF', ga: 'GS', gd: 'DR', pts: 'Pti', last5: 'Ultime 5', goals: 'Gol', player: 'Giocatore', group: 'Gruppo A' },
-  es: { title: 'Copa Mundial 2026', subtitle: 'Información general, Partidos, Clasificación, Estadísticas', standings: 'Clasificación', stats: 'Líderes', team: 'Equipo', p: 'PJ', w: 'G', d: 'E', l: 'P', gf: 'GF', ga: 'GC', gd: 'DG', pts: 'Pts', last5: 'Últimos 5', goals: 'Goles', player: 'Jugador', group: 'Grupo A' }
+  id: { title: 'Piala Dunia FIFA 2026', subtitle: 'Informasi umum, Pertandingan, Klasemen, Statistik', standings: 'Klasemen', stats: 'Pemimpin statistik', knockout: 'Fase Gugur', team: 'Tim', p: 'T', w: 'M', d: 'S', l: 'K', gf: 'GM', ga: 'GK', gd: 'SG', pts: 'Poin', last5: '5 Terakhir', goals: 'Gol', player: 'Pemain', group: 'Grup A' },
+  en: { title: 'FIFA World Cup 2026', subtitle: 'General Info, Matches, Standings, Statistics', standings: 'Standings', stats: 'Stat Leaders', knockout: 'Knockout', team: 'Team', p: 'P', w: 'W', d: 'D', l: 'L', gf: 'GF', ga: 'GA', gd: 'GD', pts: 'Pts', last5: 'Last 5', goals: 'Goals', player: 'Player', group: 'Group A' },
+  ar: { title: 'كأس العالم 2026', subtitle: 'معلومات عامة، مباريات، ترتيب، إحصائيات', standings: 'الترتيب', stats: 'قادة الإحصائيات', knockout: 'خروج المغلوب', team: 'فريق', p: 'ل', w: 'ف', d: 'ت', l: 'خ', gf: 'أ.ل', ga: 'أ.ع', gd: 'ف.أ', pts: 'نقاط', last5: 'آخر 5', goals: 'أهداف', player: 'لاعب', group: 'المجموعة أ' },
+  ru: { title: 'Чемпионат мира 2026', subtitle: 'Общая информация, Матчи, Турнирная таблица, Статистика', standings: 'Таблица', stats: 'Лидеры', knockout: 'Плей-офф', team: 'Команда', p: 'И', w: 'В', d: 'Н', l: 'П', gf: 'ЗГ', ga: 'ПГ', gd: 'РГ', pts: 'Очки', last5: 'Последние 5', goals: 'Голы', player: 'Игрок', group: 'Группа A' },
+  hi: { title: 'फीफा विश्व कप 2026', subtitle: 'सामान्य जानकारी, मैच, स्टैंडिंग, सांख्यिकी', standings: 'स्टैंडिंग', stats: 'सांख्यिकी', knockout: 'नॉकआउट', team: 'टीम', p: 'P', w: 'W', d: 'D', l: 'L', gf: 'GF', ga: 'GA', gd: 'GD', pts: 'Pts', last5: 'अंतिम 5', goals: 'लक्ष्य', player: 'खिलाड़ी', group: 'समूह A' },
+  zh: { title: '2026 国际足联世界杯', subtitle: '一般信息, 比赛, 积分榜, 统计', standings: '积分榜', stats: '统计领先者', knockout: '淘汰赛', team: '球队', p: '场', w: '胜', d: '平', l: '负', gf: '进', ga: '失', gd: '净', pts: '分', last5: '近5场', goals: '进球', player: '球员', group: 'A组' },
+  ms: { title: 'Piala Dunia FIFA 2026', subtitle: 'Maklumat Umum, Perlawanan, Kedudukan, Statistik', standings: 'Kedudukan', stats: 'Pemimpin Statistik', knockout: 'Kalah Mati', team: 'Pasukan', p: 'P', w: 'M', d: 'S', l: 'K', gf: 'JG', ga: 'GB', gd: 'PG', pts: 'Mata', last5: '5 Terakhir', goals: 'Gol', player: 'Pemain', group: 'Kumpulan A' },
+  it: { title: 'Coppa del Mondo 2026', subtitle: 'Informazioni, Partite, Classifiche, Statistiche', standings: 'Classifica', stats: 'Leader Statistiche', knockout: 'Fase a Eliminazione', team: 'Squadra', p: 'G', w: 'V', d: 'P', l: 'S', gf: 'GF', ga: 'GS', gd: 'DR', pts: 'Pti', last5: 'Ultime 5', goals: 'Gol', player: 'Giocatore', group: 'Gruppo A' },
+  es: { title: 'Copa Mundial 2026', subtitle: 'Información general, Partidos, Clasificación, Estadísticas', standings: 'Clasificación', stats: 'Líderes', knockout: 'Fase Eliminatoria', team: 'Equipo', p: 'PJ', w: 'G', d: 'E', l: 'P', gf: 'GF', ga: 'GC', gd: 'DG', pts: 'Pts', last5: 'Últimos 5', goals: 'Goles', player: 'Jugador', group: 'Grupo A' }
 };
 
 const allGroups = {
@@ -111,6 +112,58 @@ const topScorersData = [
   { rank: 4, name: 'Vinícius Júnior', country: 'Brasil', flag: '🇧🇷', goals: 2, img: 'https://ui-avatars.com/api/?name=Vinicius+Junior&background=eab308&color=fff&rounded=true' }
 ];
 
+const knockoutData = {
+  r32_l: [
+    { id: 'M73', date: '30/6', t1: { name: 'GER', flag: '🇩🇪', score: '' }, t2: { name: 'PAR', flag: '🇵🇾', score: '' } },
+    { id: 'M74', date: '1/7', t1: { name: 'FRA', flag: '🇫🇷', score: '' }, t2: { name: 'SWE', flag: '🇸🇪', score: '' } },
+    { id: 'M75', date: '29/6', t1: { name: 'RSA', flag: '🇿🇦', score: '' }, t2: { name: 'CAN', flag: '🇨🇦', score: '' } },
+    { id: 'M76', date: '30/6', t1: { name: 'NED', flag: '🇳🇱', score: '' }, t2: { name: 'MAR', flag: '🇲🇦', score: '' } },
+    { id: 'M77', date: '3/7', t1: { name: 'POR', flag: '🇵🇹', score: '' }, t2: { name: 'CRO', flag: '🇭🇷', score: '' } },
+    { id: 'M78', date: '3/7', t1: { name: 'ESP', flag: '🇪🇸', score: '' }, t2: { name: 'AUT', flag: '🇦🇹', score: '' } },
+    { id: 'M79', date: '2/7', t1: { name: 'USA', flag: '🇺🇸', score: '' }, t2: { name: 'BIH', flag: '🇧🇦', score: '' } },
+    { id: 'M80', date: '2/7', t1: { name: 'BEL', flag: '🇧🇪', score: '' }, t2: { name: 'SEN', flag: '🇸🇳', score: '' } },
+  ],
+  r16_l: Array(4).fill({ id: 'W', date: '5/7', t1: { name: 'TBD', flag: '❓' }, t2: { name: 'TBD', flag: '❓' } }),
+  qf_l: Array(2).fill({ id: 'W', date: '10/7', t1: { name: 'TBD', flag: '❓' }, t2: { name: 'TBD', flag: '❓' } }),
+  sf_l: Array(1).fill({ id: 'W', date: '15/7', t1: { name: 'TBD', flag: '❓' }, t2: { name: 'TBD', flag: '❓' } }),
+  
+  r32_r: [
+    { id: 'M81', date: '30/6', t1: { name: 'BRA', flag: '🇧🇷', score: '' }, t2: { name: 'JPN', flag: '🇯🇵', score: '' } },
+    { id: 'M82', date: '1/7', t1: { name: 'CIV', flag: '🇨🇮', score: '' }, t2: { name: 'NOR', flag: '🇳🇴', score: '' } },
+    { id: 'M83', date: '1/7', t1: { name: 'MEX', flag: '🇲🇽', score: '' }, t2: { name: 'ECU', flag: '🇪🇨', score: '' } },
+    { id: 'M84', date: '1/7', t1: { name: 'ENG', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', score: '' }, t2: { name: 'COD', flag: '🇨🇩', score: '' } },
+    { id: 'M85', date: '4/7', t1: { name: 'ARG', flag: '🇦🇷', score: '' }, t2: { name: 'CPV', flag: '🇨🇻', score: '' } },
+    { id: 'M86', date: '4/7', t1: { name: 'AUS', flag: '🇦🇺', score: '' }, t2: { name: 'EGY', flag: '🇪🇬', score: '' } },
+    { id: 'M87', date: '3/7', t1: { name: 'SUI', flag: '🇨🇭', score: '' }, t2: { name: 'ALG', flag: '🇩🇿', score: '' } },
+    { id: 'M88', date: '4/7', t1: { name: 'COL', flag: '🇨🇴', score: '' }, t2: { name: 'GHA', flag: '🇬🇭', score: '' } },
+  ],
+  r16_r: Array(4).fill({ id: 'W', date: '6/7', t1: { name: 'TBD', flag: '❓' }, t2: { name: 'TBD', flag: '❓' } }),
+  qf_r: Array(2).fill({ id: 'W', date: '11/7', t1: { name: 'TBD', flag: '❓' }, t2: { name: 'TBD', flag: '❓' } }),
+  sf_r: Array(1).fill({ id: 'W', date: '16/7', t1: { name: 'TBD', flag: '❓' }, t2: { name: 'TBD', flag: '❓' } }),
+
+  final: [{ id: 'FINAL', date: '20/7/2026', t1: { name: 'TBD', flag: '❓' }, t2: { name: 'TBD', flag: '❓' } }],
+  third: [{ id: 'THIRD', date: '19/7/2026', t1: { name: 'TBD', flag: '❓' }, t2: { name: 'TBD', flag: '❓' } }]
+};
+
+const MatchCard = ({ match, isFinal = false }) => (
+  <div className={`w-36 md:w-44 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2 shadow-sm shrink-0 hover:border-orange-500 hover:shadow-orange-500/20 hover:-translate-y-0.5 transition-all cursor-default ${isFinal ? 'w-48 md:w-56 border-orange-500/50 shadow-orange-500/10' : ''}`}>
+    <div className="text-[9px] md:text-[10px] text-zinc-500 flex justify-between mb-1.5 font-mono">
+      <span>{match.date}</span>
+      <span className="font-bold text-zinc-400">{match.id}</span>
+    </div>
+    <div className="flex flex-col gap-1">
+      <div className="flex justify-between items-center bg-zinc-50 dark:bg-zinc-800/50 px-2 py-1 rounded">
+        <div className="flex items-center gap-1.5"><span className="text-xs">{match.t1.flag}</span><span className="text-[10px] md:text-xs font-bold text-zinc-800 dark:text-zinc-200">{match.t1.name}</span></div>
+        <span className="text-[10px] md:text-xs font-mono font-bold text-zinc-400">{match.t1.score || '-'}</span>
+      </div>
+      <div className="flex justify-between items-center bg-zinc-50 dark:bg-zinc-800/50 px-2 py-1 rounded">
+        <div className="flex items-center gap-1.5"><span className="text-xs">{match.t2.flag}</span><span className="text-[10px] md:text-xs font-bold text-zinc-800 dark:text-zinc-200">{match.t2.name}</span></div>
+        <span className="text-[10px] md:text-xs font-mono font-bold text-zinc-400">{match.t2.score || '-'}</span>
+      </div>
+    </div>
+  </div>
+);
+
 const FormIcon = ({ result }) => {
   if (result === 'W') return <CheckCircle2 size={16} className="text-emerald-500" />;
   if (result === 'L') return <XCircle size={16} className="text-red-500" />;
@@ -188,6 +241,13 @@ const WorldCup = ({ lang }) => {
                 className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm hover:-translate-y-1 ${activeTab === 'stats' ? 'bg-orange-500 text-white shadow-orange-500/30 shadow-lg' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
               >
                 {t.stats}
+              </button>
+              <button 
+                onClick={() => setActiveTab('knockout')}
+                aria-label={`Tab: ${t.knockout}`}
+                className={`px-5 py-2 rounded-full text-sm font-bold transition-all shadow-sm hover:-translate-y-1 ${activeTab === 'knockout' ? 'bg-orange-500 text-white shadow-orange-500/30 shadow-lg' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-700'}`}
+              >
+                {t.knockout}
               </button>
             </div>
           </div>
@@ -325,6 +385,82 @@ const WorldCup = ({ lang }) => {
             <button aria-label="Lihat semua statistik" className="w-full mt-6 py-3 rounded-xl border border-zinc-200 dark:border-zinc-800 font-bold text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
               Lihat semua statistik
             </button>
+          </div>
+          )}
+
+          {/* Knockout Bracket Tab */}
+          {activeTab === 'knockout' && (
+          <div className="dashboard-card xl:col-span-3 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-xl relative group min-h-[600px] flex flex-col">
+            <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center bg-zinc-50/50 dark:bg-zinc-900/50 z-10">
+              <div className="flex items-center space-x-3">
+                <Trophy className="text-orange-500" />
+                <h3 className="text-xl md:text-2xl font-bold">{t.knockout}</h3>
+              </div>
+              <div className="flex items-center space-x-2 text-xs font-bold text-zinc-500 bg-zinc-200/50 dark:bg-zinc-800/50 px-3 py-1.5 rounded-full">
+                <ZoomIn size={14} />
+                <span>Pan & Zoom</span>
+              </div>
+            </div>
+
+            <div className="flex-grow w-full h-[600px] md:h-[700px] cursor-grab active:cursor-grabbing bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:20px_20px]">
+              <TransformWrapper 
+                initialScale={window.innerWidth < 768 ? 0.6 : 0.85} 
+                minScale={0.3} 
+                maxScale={2} 
+                centerOnInit={true}
+                wheel={{ step: 0.1 }}
+              >
+                <TransformComponent wrapperStyle={{ width: "100%", height: "100%" }} contentStyle={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  
+                  {/* Bracket Container - 9 Columns */}
+                  <div className="flex items-stretch justify-center gap-6 md:gap-10 p-12 select-none">
+                    
+                    {/* Left Side */}
+                    <div className="flex flex-col justify-around gap-4 relative">
+                      {knockoutData.r32_l.map((m, i) => <MatchCard key={i} match={m} />)}
+                    </div>
+                    <div className="flex flex-col justify-around gap-8 relative">
+                      {knockoutData.r16_l.map((m, i) => <MatchCard key={i} match={m} />)}
+                    </div>
+                    <div className="flex flex-col justify-around gap-16 relative">
+                      {knockoutData.qf_l.map((m, i) => <MatchCard key={i} match={m} />)}
+                    </div>
+                    <div className="flex flex-col justify-around gap-32 relative">
+                      {knockoutData.sf_l.map((m, i) => <MatchCard key={i} match={m} />)}
+                    </div>
+
+                    {/* Center (Final & Third Place) */}
+                    <div className="flex flex-col justify-center items-center gap-12 relative px-4">
+                      <div className="text-center">
+                        <div className="text-sm font-black text-orange-500 mb-3 tracking-widest uppercase flex items-center justify-center space-x-2">
+                          <Trophy size={16} /> <span>FINAL</span> <Trophy size={16} />
+                        </div>
+                        <MatchCard match={knockoutData.final[0]} isFinal={true} />
+                      </div>
+                      <div className="text-center mt-12 opacity-80">
+                        <div className="text-xs font-bold text-zinc-500 mb-2 uppercase">Third Place</div>
+                        <MatchCard match={knockoutData.third[0]} />
+                      </div>
+                    </div>
+
+                    {/* Right Side */}
+                    <div className="flex flex-col justify-around gap-32 relative">
+                      {knockoutData.sf_r.map((m, i) => <MatchCard key={i} match={m} />)}
+                    </div>
+                    <div className="flex flex-col justify-around gap-16 relative">
+                      {knockoutData.qf_r.map((m, i) => <MatchCard key={i} match={m} />)}
+                    </div>
+                    <div className="flex flex-col justify-around gap-8 relative">
+                      {knockoutData.r16_r.map((m, i) => <MatchCard key={i} match={m} />)}
+                    </div>
+                    <div className="flex flex-col justify-around gap-4 relative">
+                      {knockoutData.r32_r.map((m, i) => <MatchCard key={i} match={m} />)}
+                    </div>
+                    
+                  </div>
+                </TransformComponent>
+              </TransformWrapper>
+            </div>
           </div>
           )}
 
