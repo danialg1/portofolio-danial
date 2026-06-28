@@ -21,76 +21,76 @@ const wcDict = {
 
 const allGroups = {
   A: [
-    { rank: 1, name: 'Meksiko', flag: '🇲🇽', p: 2, w: 2, d: 0, l: 0, gf: 3, ga: 0, gd: 3, pts: 6, form: ['W', 'W', '-', '-', '-'] },
-    { rank: 2, name: 'Republik Korea', flag: '🇰🇷', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 2, gd: 0, pts: 3, form: ['L', 'W', '-', '-', '-'] },
-    { rank: 3, name: 'Ceko', flag: '🇨🇿', p: 2, w: 0, d: 1, l: 1, gf: 2, ga: 3, gd: -1, pts: 1, form: ['L', 'D', '-', '-', '-'] },
-    { rank: 4, name: 'Afrika Selatan', flag: '🇿🇦', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 3, gd: -2, pts: 1, form: ['L', 'D', '-', '-', '-'] }
+    { rank: 1, name: 'Meksiko', flag: '🇲🇽', p: 3, w: 2, d: 1, l: 0, gf: 4, ga: 1, gd: 3, pts: 7, form: ['D', 'W', 'W', '-', '-'] },
+    { rank: 2, name: 'Afrika Selatan', flag: '🇿🇦', p: 3, w: 1, d: 1, l: 1, gf: 3, ga: 3, gd: 0, pts: 4, form: ['W', 'L', 'D', '-', '-'] },
+    { rank: 3, name: 'Republik Korea', flag: '🇰🇷', p: 3, w: 1, d: 0, l: 2, gf: 3, ga: 4, gd: -1, pts: 3, form: ['L', 'W', 'L', '-', '-'] },
+    { rank: 4, name: 'Ceko', flag: '🇨🇿', p: 3, w: 0, d: 2, l: 1, gf: 3, ga: 5, gd: -2, pts: 2, form: ['D', 'D', 'L', '-', '-'] }
   ],
   B: [
-    { rank: 1, name: 'Kanada', flag: '🇨🇦', p: 2, w: 1, d: 1, l: 0, gf: 7, ga: 1, gd: 6, pts: 4, form: ['W', 'D', '-', '-', '-'] },
-    { rank: 2, name: 'Swiss', flag: '🇨🇭', p: 2, w: 1, d: 1, l: 0, gf: 5, ga: 2, gd: 3, pts: 4, form: ['D', 'W', '-', '-', '-'] },
-    { rank: 3, name: 'Bosnia dan Herzegovina', flag: '🇧🇦', p: 2, w: 0, d: 1, l: 1, gf: 2, ga: 5, gd: -3, pts: 1, form: ['D', 'L', '-', '-', '-'] },
-    { rank: 4, name: 'Qatar', flag: '🇶🇦', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 7, gd: -6, pts: 1, form: ['D', 'L', '-', '-', '-'] }
+    { rank: 1, name: 'Swiss', flag: '🇨🇭', p: 3, w: 2, d: 1, l: 0, gf: 7, ga: 2, gd: 5, pts: 7, form: ['W', 'W', 'D', '-', '-'] },
+    { rank: 2, name: 'Kanada', flag: '🇨🇦', p: 3, w: 1, d: 2, l: 0, gf: 8, ga: 2, gd: 6, pts: 5, form: ['D', 'W', 'D', '-', '-'] },
+    { rank: 3, name: 'Bosnia dan Herzegovina', flag: '🇧🇦', p: 3, w: 1, d: 1, l: 1, gf: 4, ga: 6, gd: -2, pts: 4, form: ['W', 'L', 'D', '-', '-'] },
+    { rank: 4, name: 'Qatar', flag: '🇶🇦', p: 3, w: 0, d: 0, l: 3, gf: 2, ga: 11, gd: -9, pts: 0, form: ['L', 'L', 'L', '-', '-'] }
   ],
   C: [
-    { rank: 1, name: 'Brasil', flag: '🇧🇷', p: 2, w: 1, d: 1, l: 0, gf: 4, ga: 1, gd: 3, pts: 4, form: ['W', 'D', '-', '-', '-'] },
-    { rank: 2, name: 'Maroko', flag: '🇲🇦', p: 2, w: 1, d: 1, l: 0, gf: 2, ga: 1, gd: 1, pts: 4, form: ['D', 'W', '-', '-', '-'] },
-    { rank: 3, name: 'Skotlandia', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', p: 2, w: 1, d: 0, l: 1, gf: 1, ga: 1, gd: 0, pts: 3, form: ['W', 'L', '-', '-', '-'] },
-    { rank: 4, name: 'Haiti', flag: '🇭🇹', p: 2, w: 0, d: 0, l: 2, gf: 0, ga: 4, gd: -4, pts: 0, form: ['L', 'L', '-', '-', '-'] }
+    { rank: 1, name: 'Brasil', flag: '🇧🇷', p: 3, w: 2, d: 1, l: 0, gf: 7, ga: 1, gd: 6, pts: 7, form: ['W', 'W', 'D', '-', '-'] },
+    { rank: 2, name: 'Maroko', flag: '🇲🇦', p: 3, w: 2, d: 1, l: 0, gf: 4, ga: 1, gd: 3, pts: 7, form: ['W', 'D', 'W', '-', '-'] },
+    { rank: 3, name: 'Skotlandia', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', p: 3, w: 1, d: 0, l: 2, gf: 1, ga: 4, gd: -3, pts: 3, form: ['L', 'L', 'W', '-', '-'] },
+    { rank: 4, name: 'Haiti', flag: '🇭🇹', p: 3, w: 0, d: 0, l: 3, gf: 0, ga: 6, gd: -6, pts: 0, form: ['L', 'L', 'L', '-', '-'] }
   ],
   D: [
-    { rank: 1, name: 'AS', flag: '🇺🇸', p: 2, w: 2, d: 0, l: 0, gf: 6, ga: 1, gd: 5, pts: 6, form: ['W', 'W', '-', '-', '-'] },
-    { rank: 2, name: 'Australia', flag: '🇦🇺', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 2, gd: 0, pts: 3, form: ['W', 'L', '-', '-', '-'] },
-    { rank: 3, name: 'Paraguay', flag: '🇵🇾', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 4, gd: -2, pts: 3, form: ['L', 'W', '-', '-', '-'] },
-    { rank: 4, name: 'Turki', flag: '🇹🇷', p: 2, w: 0, d: 0, l: 2, gf: 0, ga: 3, gd: -3, pts: 0, form: ['L', 'L', '-', '-', '-'] }
+    { rank: 1, name: 'AS', flag: '🇺🇸', p: 3, w: 3, d: 0, l: 0, gf: 8, ga: 1, gd: 7, pts: 9, form: ['W', 'W', 'W', '-', '-'] },
+    { rank: 2, name: 'Australia', flag: '🇦🇺', p: 3, w: 1, d: 1, l: 1, gf: 3, ga: 3, gd: 0, pts: 4, form: ['D', 'L', 'W', '-', '-'] },
+    { rank: 3, name: 'Paraguay', flag: '🇵🇾', p: 3, w: 1, d: 1, l: 1, gf: 3, ga: 5, gd: -2, pts: 4, form: ['D', 'W', 'L', '-', '-'] },
+    { rank: 4, name: 'Turki', flag: '🇹🇷', p: 3, w: 0, d: 0, l: 3, gf: 0, ga: 5, gd: -5, pts: 0, form: ['L', 'L', 'L', '-', '-'] }
   ],
   E: [
-    { rank: 1, name: 'Jerman', flag: '🇩🇪', p: 2, w: 2, d: 0, l: 0, gf: 9, ga: 2, gd: 7, pts: 6, form: ['W', 'W', '-', '-', '-'] },
-    { rank: 2, name: 'Pantai Gading', flag: '🇨🇮', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 2, gd: 0, pts: 3, form: ['W', 'L', '-', '-', '-'] },
-    { rank: 3, name: 'Ekuador', flag: '🇪🇨', p: 2, w: 0, d: 1, l: 1, gf: 0, ga: 1, gd: -1, pts: 1, form: ['L', 'D', '-', '-', '-'] },
-    { rank: 4, name: 'Curaçao', flag: '🇨🇼', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 7, gd: -6, pts: 1, form: ['D', 'L', '-', '-', '-'] }
+    { rank: 1, name: 'Jerman', flag: '🇩🇪', p: 3, w: 3, d: 0, l: 0, gf: 12, ga: 3, gd: 9, pts: 9, form: ['W', 'W', 'W', '-', '-'] },
+    { rank: 2, name: 'Pantai Gading', flag: '🇨🇮', p: 3, w: 2, d: 0, l: 1, gf: 5, ga: 3, gd: 2, pts: 6, form: ['W', 'L', 'W', '-', '-'] },
+    { rank: 3, name: 'Ekuador', flag: '🇪🇨', p: 3, w: 0, d: 1, l: 2, gf: 1, ga: 4, gd: -3, pts: 1, form: ['L', 'D', 'L', '-', '-'] },
+    { rank: 4, name: 'Curaçao', flag: '🇨🇼', p: 3, w: 0, d: 1, l: 2, gf: 2, ga: 10, gd: -8, pts: 1, form: ['L', 'L', 'D', '-', '-'] }
   ],
   F: [
-    { rank: 1, name: 'Belanda', flag: '🇳🇱', p: 2, w: 1, d: 1, l: 0, gf: 7, ga: 3, gd: 4, pts: 4, form: ['W', 'D', '-', '-', '-'] },
-    { rank: 2, name: 'Jepang', flag: '🇯🇵', p: 2, w: 1, d: 1, l: 0, gf: 6, ga: 2, gd: 4, pts: 4, form: ['D', 'W', '-', '-', '-'] },
-    { rank: 3, name: 'Swedia', flag: '🇸🇪', p: 2, w: 1, d: 0, l: 1, gf: 6, ga: 6, gd: 0, pts: 3, form: ['W', 'L', '-', '-', '-'] },
-    { rank: 4, name: 'Tunisia', flag: '🇹🇳', p: 2, w: 0, d: 0, l: 2, gf: 1, ga: 9, gd: -8, pts: 0, form: ['L', 'L', '-', '-', '-'] }
+    { rank: 1, name: 'Belanda', flag: '🇳🇱', p: 3, w: 2, d: 1, l: 0, gf: 9, ga: 3, gd: 6, pts: 7, form: ['W', 'W', 'D', '-', '-'] },
+    { rank: 2, name: 'Jepang', flag: '🇯🇵', p: 3, w: 2, d: 1, l: 0, gf: 8, ga: 3, gd: 5, pts: 7, form: ['W', 'D', 'W', '-', '-'] },
+    { rank: 3, name: 'Swedia', flag: '🇸🇪', p: 3, w: 1, d: 0, l: 2, gf: 7, ga: 8, gd: -1, pts: 3, form: ['L', 'L', 'W', '-', '-'] },
+    { rank: 4, name: 'Tunisia', flag: '🇹🇳', p: 3, w: 0, d: 0, l: 3, gf: 2, ga: 12, gd: -10, pts: 0, form: ['L', 'L', 'L', '-', '-'] }
   ],
   G: [
-    { rank: 1, name: 'Selandia Baru', flag: '🇳🇿', p: 1, w: 0, d: 1, l: 0, gf: 2, ga: 2, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] },
-    { rank: 2, name: 'IR Iran', flag: '🇮🇷', p: 1, w: 0, d: 1, l: 0, gf: 2, ga: 2, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] },
-    { rank: 3, name: 'Belgia', flag: '🇧🇪', p: 1, w: 0, d: 1, l: 0, gf: 1, ga: 1, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] },
-    { rank: 4, name: 'Mesir', flag: '🇪🇬', p: 1, w: 0, d: 1, l: 0, gf: 1, ga: 1, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] }
+    { rank: 1, name: 'Belgia', flag: '🇧🇪', p: 3, w: 1, d: 2, l: 0, gf: 4, ga: 2, gd: 2, pts: 5, form: ['D', 'W', 'D', '-', '-'] },
+    { rank: 2, name: 'Mesir', flag: '🇪🇬', p: 3, w: 1, d: 2, l: 0, gf: 4, ga: 3, gd: 1, pts: 5, form: ['D', 'D', 'W', '-', '-'] },
+    { rank: 3, name: 'IR Iran', flag: '🇮🇷', p: 3, w: 0, d: 3, l: 0, gf: 4, ga: 4, gd: 0, pts: 3, form: ['D', 'D', 'D', '-', '-'] },
+    { rank: 4, name: 'Selandia Baru', flag: '🇳🇿', p: 3, w: 0, d: 1, l: 2, gf: 4, ga: 7, gd: -3, pts: 1, form: ['L', 'L', 'D', '-', '-'] }
   ],
   H: [
-    { rank: 1, name: 'Spanyol', flag: '🇪🇸', p: 2, w: 1, d: 1, l: 0, gf: 4, ga: 0, gd: 4, pts: 4, form: ['W', 'D', '-', '-', '-'] },
-    { rank: 2, name: 'Uruguay', flag: '🇺🇾', p: 1, w: 0, d: 1, l: 0, gf: 1, ga: 1, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] },
-    { rank: 3, name: 'Arab Saudi', flag: '🇸🇦', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 5, gd: -4, pts: 1, form: ['D', 'L', '-', '-', '-'] },
-    { rank: 4, name: 'Tanjung Verde', flag: '🇨🇻', p: 1, w: 0, d: 1, l: 0, gf: 0, ga: 0, gd: 0, pts: 1, form: ['D', '-', '-', '-', '-'] }
+    { rank: 1, name: 'Spanyol', flag: '🇪🇸', p: 3, w: 2, d: 1, l: 0, gf: 6, ga: 1, gd: 5, pts: 7, form: ['W', 'W', 'D', '-', '-'] },
+    { rank: 2, name: 'Tanjung Verde', flag: '🇨🇻', p: 3, w: 1, d: 2, l: 0, gf: 2, ga: 1, gd: 1, pts: 5, form: ['D', 'D', 'W', '-', '-'] },
+    { rank: 3, name: 'Uruguay', flag: '🇺🇾', p: 3, w: 0, d: 2, l: 1, gf: 2, ga: 4, gd: -2, pts: 2, form: ['L', 'D', 'D', '-', '-'] },
+    { rank: 4, name: 'Arab Saudi', flag: '🇸🇦', p: 3, w: 0, d: 1, l: 2, gf: 2, ga: 6, gd: -4, pts: 1, form: ['L', 'L', 'D', '-', '-'] }
   ],
   I: [
-    { rank: 1, name: 'Norwegia', flag: '🇳🇴', p: 1, w: 1, d: 0, l: 0, gf: 4, ga: 1, gd: 3, pts: 3, form: ['W', '-', '-', '-', '-'] },
-    { rank: 2, name: 'Prancis', flag: '🇫🇷', p: 1, w: 1, d: 0, l: 0, gf: 3, ga: 1, gd: 2, pts: 3, form: ['W', '-', '-', '-', '-'] },
-    { rank: 3, name: 'Senegal', flag: '🇸🇳', p: 1, w: 0, d: 0, l: 1, gf: 1, ga: 3, gd: -2, pts: 0, form: ['L', '-', '-', '-', '-'] },
-    { rank: 4, name: 'Irak', flag: '🇮🇶', p: 1, w: 0, d: 0, l: 1, gf: 1, ga: 4, gd: -3, pts: 0, form: ['L', '-', '-', '-', '-'] }
+    { rank: 1, name: 'Prancis', flag: '🇫🇷', p: 3, w: 2, d: 1, l: 0, gf: 5, ga: 1, gd: 4, pts: 7, form: ['D', 'W', 'W', '-', '-'] },
+    { rank: 2, name: 'Norwegia', flag: '🇳🇴', p: 3, w: 2, d: 0, l: 1, gf: 6, ga: 3, gd: 3, pts: 6, form: ['L', 'W', 'W', '-', '-'] },
+    { rank: 3, name: 'Senegal', flag: '🇸🇳', p: 3, w: 1, d: 1, l: 1, gf: 3, ga: 4, gd: -1, pts: 4, form: ['D', 'L', 'W', '-', '-'] },
+    { rank: 4, name: 'Irak', flag: '🇮🇶', p: 3, w: 0, d: 0, l: 3, gf: 2, ga: 8, gd: -6, pts: 0, form: ['L', 'L', 'L', '-', '-'] }
   ],
   J: [
-    { rank: 1, name: 'Inggris', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', p: 2, w: 2, d: 0, l: 0, gf: 5, ga: 1, gd: 4, pts: 6, form: ['W', 'W', '-', '-', '-'] },
-    { rank: 2, name: 'Nigeria', flag: '🇳🇬', p: 2, w: 1, d: 0, l: 1, gf: 3, ga: 2, gd: 1, pts: 3, form: ['L', 'W', '-', '-', '-'] },
-    { rank: 3, name: 'Jamaika', flag: '🇯🇲', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 3, gd: -2, pts: 1, form: ['D', 'L', '-', '-', '-'] },
-    { rank: 4, name: 'Oman', flag: '🇴🇲', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 4, gd: -3, pts: 1, form: ['L', 'D', '-', '-', '-'] }
+    { rank: 1, name: 'Inggris', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', p: 3, w: 3, d: 0, l: 0, gf: 7, ga: 1, gd: 6, pts: 9, form: ['W', 'W', 'W', '-', '-'] },
+    { rank: 2, name: 'Nigeria', flag: '🇳🇬', p: 3, w: 2, d: 0, l: 1, gf: 5, ga: 2, gd: 3, pts: 6, form: ['W', 'L', 'W', '-', '-'] },
+    { rank: 3, name: 'Jamaika', flag: '🇯🇲', p: 3, w: 0, d: 1, l: 2, gf: 1, ga: 5, gd: -4, pts: 1, form: ['L', 'D', 'L', '-', '-'] },
+    { rank: 4, name: 'Oman', flag: '🇴🇲', p: 3, w: 0, d: 1, l: 2, gf: 1, ga: 6, gd: -5, pts: 1, form: ['L', 'L', 'D', '-', '-'] }
   ],
   K: [
-    { rank: 1, name: 'Portugal', flag: '🇵🇹', p: 2, w: 1, d: 1, l: 0, gf: 4, ga: 1, gd: 3, pts: 4, form: ['W', 'D', '-', '-', '-'] },
-    { rank: 2, name: 'Kolombia', flag: '🇨🇴', p: 2, w: 1, d: 1, l: 0, gf: 3, ga: 2, gd: 1, pts: 4, form: ['D', 'W', '-', '-', '-'] },
-    { rank: 3, name: 'Kroasia', flag: '🇭🇷', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 3, gd: -1, pts: 3, form: ['L', 'W', '-', '-', '-'] },
-    { rank: 4, name: 'Fiji', flag: '🇫🇯', p: 2, w: 0, d: 0, l: 2, gf: 0, ga: 3, gd: -3, pts: 0, form: ['L', 'L', '-', '-', '-'] }
+    { rank: 1, name: 'Portugal', flag: '🇵🇹', p: 3, w: 2, d: 1, l: 0, gf: 6, ga: 1, gd: 5, pts: 7, form: ['W', 'W', 'D', '-', '-'] },
+    { rank: 2, name: 'Kolombia', flag: '🇨🇴', p: 3, w: 1, d: 2, l: 0, gf: 4, ga: 3, gd: 1, pts: 5, form: ['D', 'D', 'W', '-', '-'] },
+    { rank: 3, name: 'Kroasia', flag: '🇭🇷', p: 3, w: 1, d: 1, l: 1, gf: 3, ga: 4, gd: -1, pts: 4, form: ['D', 'L', 'W', '-', '-'] },
+    { rank: 4, name: 'Fiji', flag: '🇫🇯', p: 3, w: 0, d: 0, l: 3, gf: 0, ga: 5, gd: -5, pts: 0, form: ['L', 'L', 'L', '-', '-'] }
   ],
   L: [
-    { rank: 1, name: 'Argentina', flag: '🇦🇷', p: 2, w: 2, d: 0, l: 0, gf: 5, ga: 0, gd: 5, pts: 6, form: ['W', 'W', '-', '-', '-'] },
-    { rank: 2, name: 'Mali', flag: '🇲🇱', p: 2, w: 1, d: 0, l: 1, gf: 2, ga: 2, gd: 0, pts: 3, form: ['W', 'L', '-', '-', '-'] },
-    { rank: 3, name: 'Wales', flag: '🏴󠁧󠁢󠁷󠁬󠁳󠁿', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 3, gd: -2, pts: 1, form: ['D', 'L', '-', '-', '-'] },
-    { rank: 4, name: 'Yordania', flag: '🇯🇴', p: 2, w: 0, d: 1, l: 1, gf: 1, ga: 4, gd: -3, pts: 1, form: ['L', 'D', '-', '-', '-'] }
+    { rank: 1, name: 'Argentina', flag: '🇦🇷', p: 3, w: 2, d: 1, l: 0, gf: 6, ga: 1, gd: 5, pts: 7, form: ['D', 'W', 'W', '-', '-'] },
+    { rank: 2, name: 'Mali', flag: '🇲🇱', p: 3, w: 1, d: 1, l: 1, gf: 3, ga: 3, gd: 0, pts: 4, form: ['D', 'W', 'L', '-', '-'] },
+    { rank: 3, name: 'Wales', flag: '🏴󠁧󠁢󠁷󠁬󠁳󠁿', p: 3, w: 0, d: 2, l: 1, gf: 2, ga: 4, gd: -2, pts: 2, form: ['D', 'D', 'L', '-', '-'] },
+    { rank: 4, name: 'Yordania', flag: '🇯🇴', p: 3, w: 0, d: 2, l: 1, gf: 2, ga: 5, gd: -3, pts: 2, form: ['D', 'L', 'D', '-', '-'] }
   ]
 };
 
@@ -273,7 +273,12 @@ const WorldCup = ({ lang }) => {
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6 border-b border-zinc-100 dark:border-zinc-800 pb-6">
               <div className="flex items-center space-x-3">
                 <Trophy className="text-orange-500" />
-                <h3 className="text-2xl font-bold">{t.standings} - {t.group.split(' ')[0]} {activeGroup}</h3>
+                <h3 className="text-2xl font-bold flex flex-col md:flex-row md:items-center gap-2">
+                  <span>{t.standings} - {t.group.split(' ')[0]} {activeGroup}</span>
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full whitespace-nowrap">
+                    Update: 28 Juni 2026
+                  </span>
+                </h3>
               </div>
               
               {/* Group Selector UI */}
