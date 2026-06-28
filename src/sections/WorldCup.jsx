@@ -396,12 +396,17 @@ const WorldCup = ({ lang }) => {
           {/* Knockout Bracket Tab */}
           {activeTab === 'knockout' && (
           <div className="dashboard-card xl:col-span-3 bg-white dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-xl relative group min-h-[600px] flex flex-col">
-            <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center bg-zinc-50/50 dark:bg-zinc-900/50 z-10">
+            <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-zinc-50/50 dark:bg-zinc-900/50 z-10">
               <div className="flex items-center space-x-3">
                 <Trophy className="text-orange-500" />
-                <h3 className="text-xl md:text-2xl font-bold">{t.knockout}</h3>
+                <h3 className="text-xl md:text-2xl font-bold flex flex-col md:flex-row md:items-center gap-2">
+                  <span>{t.knockout}</span>
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full whitespace-nowrap">
+                    Update: 28 Juni 2026
+                  </span>
+                </h3>
               </div>
-              <div className="flex items-center space-x-2 text-xs font-bold text-zinc-500 bg-zinc-200/50 dark:bg-zinc-800/50 px-3 py-1.5 rounded-full">
+              <div className="flex items-center self-start md:self-auto space-x-2 text-xs font-bold text-zinc-500 bg-zinc-200/50 dark:bg-zinc-800/50 px-3 py-1.5 rounded-full">
                 <ZoomIn size={14} />
                 <span>Pan & Zoom</span>
               </div>
@@ -409,16 +414,20 @@ const WorldCup = ({ lang }) => {
 
             <div className="flex-grow w-full h-[600px] md:h-[700px] cursor-grab active:cursor-grabbing bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:20px_20px]">
               <TransformWrapper 
-                initialScale={window.innerWidth < 768 ? 0.6 : 0.85} 
-                minScale={0.3} 
+                initialScale={window.innerWidth < 768 ? 0.35 : 0.85} 
+                minScale={0.1} 
                 maxScale={2} 
                 centerOnInit={true}
                 wheel={{ step: 0.1 }}
+                limitToBounds={false}
               >
-                <TransformComponent wrapperStyle={{ width: "100%", height: "100%" }} contentStyle={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <TransformComponent 
+                  wrapperStyle={{ width: "100%", height: "100%" }} 
+                  contentStyle={{ minWidth: "max-content", minHeight: "max-content", display: "flex", alignItems: "center", justifyContent: "center", padding: "4rem" }}
+                >
                   
                   {/* Bracket Container - 9 Columns */}
-                  <div className="flex items-stretch justify-center gap-6 md:gap-10 p-12 select-none">
+                  <div className="flex items-stretch justify-center gap-6 md:gap-10 select-none">
                     
                     {/* Left Side */}
                     <div className="flex flex-col justify-around gap-4 relative">
