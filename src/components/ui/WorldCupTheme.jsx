@@ -38,16 +38,6 @@ export const WorldCupTheme = () => {
         </div>
       </div>
 
-      {/* FIFA 2026 Floating Badge */}
-      <div className="fixed bottom-6 left-6 z-[60] hidden md:flex flex-col items-center bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl px-4 py-2 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-[0_10px_40px_rgba(0,0,0,0.1)] hover:scale-110 hover:-translate-y-2 hover:rotate-2 transition-all duration-300 group cursor-default">
-         <p className="text-[10px] font-black tracking-widest text-zinc-500 uppercase">Road to</p>
-         <h4 className="text-xl font-black bg-gradient-to-r from-emerald-500 via-red-500 to-blue-500 bg-clip-text text-transparent group-hover:animate-pulse">WORLD CUP 26</h4>
-         <div className="flex space-x-1.5 mt-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-bounce" style={{ animationDelay: '0ms' }}></span>
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444] animate-bounce" style={{ animationDelay: '150ms' }}></span>
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6] animate-bounce" style={{ animationDelay: '300ms' }}></span>
-         </div>
-      </div>
     </>
   );
 };
